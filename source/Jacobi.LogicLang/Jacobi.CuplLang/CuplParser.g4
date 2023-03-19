@@ -16,9 +16,10 @@ partno: Partno freeText EndUseSpaces;
 revision: Revision freeText EndUseSpaces;
 freeText: FreeText+;
 
-pin: Pin numberOrListOrRange Eq LogicNot? (symbolOrListOrRange) SemiColon;
-numberOrListOrRange: Number | numberList | numberRange;
-symbolOrListOrRange: Symbol | symbolList | symbolRange;
+pin: pinSimple | pinList | pinRange;
+pinSimple: Pin Number Eq LogicNot? Symbol SemiColon;
+pinList: Pin numberList Eq LogicNot? symbolList SemiColon;
+pinRange: Pin numberRange Eq LogicNot? symbolRange SemiColon;
 numberList: BracketOpen Number (Comma Number)* BracketClose;
 numberRange: BracketOpen Number Range Number BracketClose;
 symbolList: BracketOpen Symbol (Comma Symbol)* BracketClose;

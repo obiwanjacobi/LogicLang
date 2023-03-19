@@ -1,5 +1,4 @@
-﻿using Antlr4.Runtime.Misc;
-using Jacobi.CuplLang.Parser;
+﻿using Jacobi.CuplLang.Parser;
 using static Jacobi.CuplLang.Parser.CuplParser;
 
 namespace Jacobi.CuplLang.Ast;
@@ -117,74 +116,71 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
 
     // Pins
 
-    public override object VisitPin(PinContext context)
+    public override object VisitPinSimple(PinSimpleContext context)
     {
         var inverted = context.LogicNot() is not null;
+        var numTxt = context.Number()?.GetText();
+        // TODO: validate symbol
+        var symbol = context.Symbol().GetText() ?? String.Empty;
 
-        var numTxt = context.numberOrListOrRange()?.Number()?.GetText();
-        if (numTxt is not null)
-        {
-            // TODO: validate symbol
-            var symbol = context.symbolOrListOrRange()?.Symbol().GetText() ?? String.Empty;
-
-            return new[] { new AstPin
-                {
-                    PinNumber = Int32.Parse(numTxt),
-                    Symbol = symbol,
-                    Inverted = inverted
-                }
-            };
-        }
-
-        var numList = context.numberOrListOrRange()?.numberList()?.Number();
-        if (numList is not null)
-        {
-            var pins = new List<AstPin>();
-
-            var symbolList = context.symbolOrListOrRange()?.symbolList()?.Symbol()!;
-
-            // TODO: number of items in numList and symbolList must match
-            for (int i = 0; i < numList.Length; i++)
+        return new[] { new AstPin
             {
-                numTxt = numList[i].GetText()!;
-                var symbol = symbolList[i].GetText()!;
-
-                pins.Add(new AstPin
-                {
-                    PinNumber = Int32.Parse(numTxt),
-                    Symbol = symbol,
-                    Inverted = inverted
-                });
+                PinNumber = Int32.Parse(numTxt),
+                Symbol = symbol,
+                Inverted = inverted
             }
+        };
+    }
 
-            return pins;
-        }
+    public override object VisitPinList(PinListContext context)
+    {
+        var pins = new List<AstPin>();
 
-        var numRng = context.numberOrListOrRange().numberRange().Number();
-        if (numRng is not null)
+        var inverted = context.LogicNot() is not null;
+        var numList = context.numberList()?.Number();
+        var symbolList = context.symbolList()?.Symbol()!;
+
+        // TODO: number of items in numList and symbolList must match
+        for (int i = 0; i < numList.Length; i++)
         {
-            var pins = new List<AstPin>();
-            var symbolRng = context.symbolOrListOrRange()?.symbolRange();
-            var symbol = new AstSymbol(symbolRng.Symbol().GetText());
-            numTxt = symbolRng.Number().GetText()!;
-            var pinNumbers = Enumerable.Range(Int32.Parse(numRng[0].GetText()), Int32.Parse(numRng[1].GetText())).ToArray();
-            var symbolNumbers = Enumerable.Range(symbol.Digits.Value, Int32.Parse(numTxt)).ToArray();
+            var numTxt = numList[i].GetText()!;
+            var symbol = symbolList[i].GetText()!;
 
-            // TODO: check span of both ranges are the same
-
-            for (int i = 0; i < pinNumbers.Length; i++)
+            pins.Add(new AstPin
             {
-                pins.Add(new AstPin
-                {
-                    PinNumber = pinNumbers[i],
-                    Symbol = $"{symbol.Name}{symbolNumbers[i]}",
-                    Inverted = inverted
-                });
-            }
-
-            return pins;
+                PinNumber = Int32.Parse(numTxt),
+                Symbol = symbol,
+                Inverted = inverted
+            });
         }
 
-        return Enumerable.Empty<AstPin>();
+        return pins;
+    }
+
+    public override object VisitPinRange(PinRangeContext context)
+    {
+        var pins = new List<AstPin>();
+
+        var inverted = context.LogicNot() is not null;
+        var numRng = context.numberRange().Number();
+        var symbolRng = context.symbolRange();
+        var symbol = new AstSymbol(symbolRng.Symbol().GetText());
+        var numTxt = symbolRng.Number().GetText()!;
+        var pinNumbers = Enumerable.Range(Int32.Parse(numRng[0].GetText()), Int32.Parse(numRng[1].GetText())).ToArray();
+        var symbolNumbers = Enumerable.Range(symbol.Digits.Value, Int32.Parse(numTxt)).ToArray();
+
+        // TODO: check span of both ranges are the same
+
+        for (int i = 0; i < pinNumbers.Length; i++)
+        {
+            pins.Add(new AstPin
+            {
+                PinNumber = pinNumbers[i],
+                Symbol = $"{symbol.Name}{symbolNumbers[i]}",
+                Inverted = inverted
+            });
+        }
+
+        return pins;
     }
 }

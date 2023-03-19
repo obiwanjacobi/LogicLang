@@ -117,17 +117,23 @@ public interface ICuplParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitPin([NotNull] CuplParser.PinContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.numberOrListOrRange"/>.
+	/// Visit a parse tree produced by <see cref="CuplParser.pinSimple"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitNumberOrListOrRange([NotNull] CuplParser.NumberOrListOrRangeContext context);
+	Result VisitPinSimple([NotNull] CuplParser.PinSimpleContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.symbolOrListOrRange"/>.
+	/// Visit a parse tree produced by <see cref="CuplParser.pinList"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSymbolOrListOrRange([NotNull] CuplParser.SymbolOrListOrRangeContext context);
+	Result VisitPinList([NotNull] CuplParser.PinListContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="CuplParser.pinRange"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPinRange([NotNull] CuplParser.PinRangeContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="CuplParser.numberList"/>.
 	/// </summary>
