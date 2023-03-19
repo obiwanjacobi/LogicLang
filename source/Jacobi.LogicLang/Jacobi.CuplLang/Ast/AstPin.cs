@@ -1,6 +1,6 @@
 ﻿namespace Jacobi.CuplLang.Ast;
 
-internal class AstPin : AstNode
+internal class AstPin
 {
     public int PinNumber { get; set; }
 }

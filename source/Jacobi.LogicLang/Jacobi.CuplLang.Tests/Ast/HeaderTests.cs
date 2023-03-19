@@ -1,7 +1,4 @@
-using System.ComponentModel.Design;
-using System.Reflection;
 using FluentAssertions;
-using Jacobi.CuplLang;
 using Jacobi.CuplLang.Ast;
 using static Jacobi.CuplLang.Parser.CuplParser;
 
@@ -17,7 +14,7 @@ namespace Jacobi.CuplLang.Tests
         }
 
         [Fact]
-        public void Test1()
+        public void HeaderFields()
         {
             const string cupl = 
                 "Name   TestName;" +

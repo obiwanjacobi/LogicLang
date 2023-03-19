@@ -1,5 +1,5 @@
 ﻿namespace Jacobi.CuplLang.Ast;
 
-internal class AstEquation : AstNode
+internal class AstEquation
 {
 }

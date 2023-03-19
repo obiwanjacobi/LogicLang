@@ -1,6 +1,6 @@
 ﻿namespace Jacobi.CuplLang.Ast;
 
-internal class AstHeader : AstNode
+internal class AstHeader
 {
     public string Assembly { get; set; } = String.Empty;
     public string Company { get; set; } = String.Empty;
