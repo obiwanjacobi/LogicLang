@@ -1,0 +1,54 @@
+http://elm-chan.org/docs/dev/jed.html (use google translate)
+
+
+The JEDEC format is used as the de facto standard for PLD fuse data format . This is just the same as the relationship between ROM writers and HEX files. PLD compilers output compilation results in this format, and PLD writers read fuse data in this format.
+
+JEDEC format fuse data is written from STX (0x01) to ETX (0x02). Blocks such as various definitions and data enter in this. * is supposed to be used as the delimiter for each block . CR and LF are treated as spaces. Next, let's use GAL16V8 fuse data as an example.
+
+
+^B                     ← STX 
+GAL16V8*QP20*QF2194*   ← 20pin PLD with 2194 logic fuses. A device name is not required. 
+G0*F0*                 ← No protection. Default value of 0 for logic fuses. 
+L0000 11110111111111111111111111111111*   ← Specify logic fuse #0 to #31. 
+L0256 0110011111111111111111111111111*   ← Specify logic fuse #256 to #287.
+L0288 01111101111011111111111111111111*
+L0320 01111101111111101111111111111111*
+L1056 11111101111011111101111111111111*
+L1088 11111101111111101101111111111111*
+L1568 11111101111011111111111111011111*
+
+               Slightly
+
+L1792 11111101110111011101110111011110*
+L1824 11111101111011111111111111111101*
+L1856 11111101111111101111111111111101*
+L1888 11111101111111111110111111111101*
+L1920 11111101111111111111111011111101*
+L1952 11111101111111111111111111101101*
+L2048 11111111*
+L2128 111111111111111111111111111111111111111111111111111111111111111*
+L2192 01*
+C6B22*      ← Fuse data checksum. 
+^C F66A      ← ETX. The following 4-digit hexadecimal number is BCC (sum of character codes from STX to ETX).
+
+[Meaning of each block]
+QP<n>
+This block specifies the number of PLD pins. For example, a 24pin PLD would be QP24 .
+
+QF<n>
+This block specifies the size of the logical fuse map. For example, if there are 2048 logic fuses, it will be QF2048 .
+
+G<n>
+Specifies whether to protect the PLD after writing. Fuse data can be read with G0 , and prohibited with G1 .
+
+F<n>
+Specifies the default value (0 or 1) for fuse data. Fuse data not transferred in an L block will have this value.
+
+L<n> <FuseData...>
+Logic fuse value. For example, for PAL, 1 cuts the corresponding fuse and 0 leaves (connects) it. The number following L is the logical fuse number (address), and the subsequent data is input to the fuse map in order from that fuse number. If the fuse values ​​in that block are all the same as the values ​​specified in the F block, that L block can be omitted. The logic fuse numbers and fuse locations are different for each device, but for most SPLDs the fuse placement as seen in the device logic diagram and the JEDEC file will match.
+
+C<hhhh>
+Checksum of logic fuse data. The fuse map is divided into bytes, and the lower 16 bits of the value obtained by adding all the bytes are indicated by four hexadecimal digits.
+
+V<n> <test vector>
+Vector for functional test. It is used in PLD writers with a function check function.

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jacobi.CuplLang", "Jacobi.CuplLang\Jacobi.CuplLang.csproj", "{579DC191-E7E7-44E4-80C5-898278111EAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jacobi.CuplLang.Tests", "Jacobi.CuplLang.Tests\Jacobi.CuplLang.Tests.csproj", "{8AB064D5-AAAE-4392-9704-B4C14CB5130D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{579DC191-E7E7-44E4-80C5-898278111EAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{579DC191-E7E7-44E4-80C5-898278111EAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{579DC191-E7E7-44E4-80C5-898278111EAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{579DC191-E7E7-44E4-80C5-898278111EAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AB064D5-AAAE-4392-9704-B4C14CB5130D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AB064D5-AAAE-4392-9704-B4C14CB5130D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AB064D5-AAAE-4392-9704-B4C14CB5130D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AB064D5-AAAE-4392-9704-B4C14CB5130D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D9E0B412-46CA-41F3-A08F-40BEBB0F4D8B}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Antlr Debug",
+            "type": "antlr-debug",
+            "request": "launch",
+            "input": "Jacobi.CuplLang/antlr.debug.pld",
+            "grammar": "Jacobi.CuplLang/CuplParser.g4",
+            "startRule": "file",
+            "printParseTree": true,
+            "visualParseTree": true
+        }
+    ]
+}

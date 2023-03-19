@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "tXQapKm6PfnFJBXB34KRUzprDY99kuz42G7a9XjFW1NvKwpKzZDXoIHTCwfgDG3CZpwWO5q79zf5kN/HtyCQOA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\marc\\source\\repos\\LogicLangEdit\\source\\Jacobi.LogicLang\\Jacobi.CuplLang\\Jacobi.CuplLang.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\marc\\.nuget\\packages\\antlr4.runtime.standard\\4.12.0\\antlr4.runtime.standard.4.12.0.nupkg.sha512"
+  ],
+  "logs": []
+}
