@@ -1,4 +1,5 @@
-﻿using Jacobi.CuplLang.Parser;
+﻿using Antlr4.Runtime.Misc;
+using Jacobi.CuplLang.Parser;
 using static Jacobi.CuplLang.Parser.CuplParser;
 
 namespace Jacobi.CuplLang.Ast;
@@ -19,7 +20,7 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
                     header = (AstHeader)VisitHeader(ctx);
                     break;
                 case PinContext ctx:
-                    pins.Add((AstPin)VisitPin(ctx));
+                    pins.AddRange((IEnumerable<AstPin>)VisitPin(ctx));
                     break;
                 case EquationContext ctx:
                     equations.Add((AstEquation)VisitEquation(ctx));
@@ -82,32 +83,108 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
     }
 
     public override object VisitAssembly(AssemblyContext context)
-        => context.freeText()?.GetText()?.Trim() ?? String.Empty;
+        => GetFreeText(context.freeText());
 
     public override object VisitCompany(CompanyContext context)
-        => context.freeText()?.GetText()?.Trim() ?? String.Empty;
+        => GetFreeText(context.freeText());
 
     public override object VisitDate(DateContext context)
-        => context.freeText()?.GetText()?.Trim() ?? String.Empty;
+        => GetFreeText(context.freeText());
 
     public override object VisitDesigner(DesignerContext context)
-        => context.freeText()?.GetText()?.Trim() ?? String.Empty;
+        => GetFreeText(context.freeText());
 
     public override object VisitDevice(DeviceContext context)
-        => context.Symbol()?.GetText()?.Trim() ?? String.Empty;
+        => context.DeviceName()?.GetText()?.Trim() ?? String.Empty;
 
     public override object VisitFormat(FormatContext context)
-        => context.Symbol()?.GetText()?.Trim() ?? String.Empty;
+        => context.FormatName()?.GetText()?.Trim() ?? String.Empty;
 
     public override object VisitLocation(LocationContext context)
-        => context.freeText()?.GetText()?.Trim() ?? String.Empty;
+        => GetFreeText(context.freeText());
 
     public override object VisitName(NameContext context)
-        => context.freeText()?.GetText()?.Trim() ?? String.Empty;
+        => GetFreeText(context.freeText());
 
     public override object VisitPartno(PartnoContext context)
-        => context.freeText()?.GetText()?.Trim() ?? String.Empty;
+        => GetFreeText(context.freeText());
 
     public override object VisitRevision(RevisionContext context)
-        => context.freeText()?.GetText()?.Trim() ?? String.Empty;
+        => GetFreeText(context.freeText());
+
+    private static string GetFreeText(FreeTextContext context)
+        => context?.GetText()?.Trim() ?? String.Empty;
+
+    // Pins
+
+    public override object VisitPin(PinContext context)
+    {
+        var inverted = context.LogicNot() is not null;
+
+        var numTxt = context.numberOrListOrRange()?.Number()?.GetText();
+        if (numTxt is not null)
+        {
+            // TODO: validate symbol
+            var symbol = context.symbolOrListOrRange()?.Symbol().GetText() ?? String.Empty;
+
+            return new[] { new AstPin
+                {
+                    PinNumber = Int32.Parse(numTxt),
+                    Symbol = symbol,
+                    Inverted = inverted
+                }
+            };
+        }
+
+        var numList = context.numberOrListOrRange()?.numberList()?.Number();
+        if (numList is not null)
+        {
+            var pins = new List<AstPin>();
+
+            var symbolList = context.symbolOrListOrRange()?.symbolList()?.Symbol()!;
+
+            // TODO: number of items in numList and symbolList must match
+            for (int i = 0; i < numList.Length; i++)
+            {
+                numTxt = numList[i].GetText()!;
+                var symbol = symbolList[i].GetText()!;
+
+                pins.Add(new AstPin
+                {
+                    PinNumber = Int32.Parse(numTxt),
+                    Symbol = symbol,
+                    Inverted = inverted
+                });
+            }
+
+            return pins;
+        }
+
+        var numRng = context.numberOrListOrRange().numberRange().Number();
+        if (numRng is not null)
+        {
+            var pins = new List<AstPin>();
+            var symbolRng = context.symbolOrListOrRange()?.symbolRange();
+            var symbol = new AstSymbol(symbolRng.Symbol().GetText());
+            numTxt = symbolRng.Number().GetText()!;
+            var pinNumbers = Enumerable.Range(Int32.Parse(numRng[0].GetText()), Int32.Parse(numRng[1].GetText())).ToArray();
+            var symbolNumbers = Enumerable.Range(symbol.Digits.Value, Int32.Parse(numTxt)).ToArray();
+
+            // TODO: check span of both ranges are the same
+
+            for (int i = 0; i < pinNumbers.Length; i++)
+            {
+                pins.Add(new AstPin
+                {
+                    PinNumber = pinNumbers[i],
+                    Symbol = $"{symbol.Name}{symbolNumbers[i]}",
+                    Inverted = inverted
+                });
+            }
+
+            return pins;
+        }
+
+        return Enumerable.Empty<AstPin>();
+    }
 }

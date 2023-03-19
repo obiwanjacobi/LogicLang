@@ -176,7 +176,7 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitPin([NotNull] CuplParser.PinContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.nameOrNumber"/>.
+	/// Visit a parse tree produced by <see cref="CuplParser.numberOrListOrRange"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -184,9 +184,9 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitNameOrNumber([NotNull] CuplParser.NameOrNumberContext context) { return VisitChildren(context); }
+	public virtual Result VisitNumberOrListOrRange([NotNull] CuplParser.NumberOrListOrRangeContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.numberOrList"/>.
+	/// Visit a parse tree produced by <see cref="CuplParser.symbolOrListOrRange"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -194,17 +194,7 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitNumberOrList([NotNull] CuplParser.NumberOrListContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.list"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitList([NotNull] CuplParser.ListContext context) { return VisitChildren(context); }
+	public virtual Result VisitSymbolOrListOrRange([NotNull] CuplParser.SymbolOrListOrRangeContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="CuplParser.numberList"/>.
 	/// <para>
@@ -216,7 +206,7 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitNumberList([NotNull] CuplParser.NumberListContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.symbolExpr"/>.
+	/// Visit a parse tree produced by <see cref="CuplParser.numberRange"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -224,9 +214,9 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSymbolExpr([NotNull] CuplParser.SymbolExprContext context) { return VisitChildren(context); }
+	public virtual Result VisitNumberRange([NotNull] CuplParser.NumberRangeContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.range"/>.
+	/// Visit a parse tree produced by <see cref="CuplParser.symbolList"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -234,7 +224,17 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitRange([NotNull] CuplParser.RangeContext context) { return VisitChildren(context); }
+	public virtual Result VisitSymbolList([NotNull] CuplParser.SymbolListContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="CuplParser.symbolRange"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitSymbolRange([NotNull] CuplParser.SymbolRangeContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="CuplParser.equation"/>.
 	/// <para>

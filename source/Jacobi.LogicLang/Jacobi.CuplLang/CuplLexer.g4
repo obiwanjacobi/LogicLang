@@ -22,7 +22,10 @@ Append: (A P P E N D);
 // extensions
 Extension: 'd' | 'oe' | 'ar' | 'sp';
 
-Symbol: ALPHA (ALPHA | DIGIT10)*;
+DeviceName: (G '16' V '8') | (G '22' V '10');
+FormatName: J;
+
+Symbol: ALPHA+ DIGIT10*;
 Number: (DIGIT10)+;
 DontCareNumber: (DIGIT10 | 'X')+;
 

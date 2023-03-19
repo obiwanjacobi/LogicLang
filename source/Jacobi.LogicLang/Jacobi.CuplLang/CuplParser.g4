@@ -8,21 +8,21 @@ assembly: Assembly freeText EndUseSpaces;
 company: Company freeText EndUseSpaces;
 date: Date freeText EndUseSpaces;
 designer: Designer freeText EndUseSpaces;
-device: Device Symbol SemiColon;
-format: Format Symbol SemiColon;
+device: Device DeviceName SemiColon;
+format: Format FormatName SemiColon;
 location: Location freeText EndUseSpaces;
 name: Name freeText EndUseSpaces;
 partno: Partno freeText EndUseSpaces;
 revision: Revision freeText EndUseSpaces;
 freeText: FreeText+;
 
-pin: Pin numberOrList Eq LogicNot? (Symbol | list) SemiColon;
-nameOrNumber: Symbol | Number;
-numberOrList: Number | numberList;
-list: BracketOpen symbolExpr (Comma symbolExpr)* BracketClose;
+pin: Pin numberOrListOrRange Eq LogicNot? (symbolOrListOrRange) SemiColon;
+numberOrListOrRange: Number | numberList | numberRange;
+symbolOrListOrRange: Symbol | symbolList | symbolRange;
 numberList: BracketOpen Number (Comma Number)* BracketClose;
-symbolExpr: nameOrNumber | range;
-range: nameOrNumber Range nameOrNumber;
+numberRange: BracketOpen Number Range Number BracketClose;
+symbolList: BracketOpen Symbol (Comma Symbol)* BracketClose;
+symbolRange: BracketOpen Symbol Range Number BracketClose;
 
 equation: Append? LogicNot? Symbol extension? Eq expression SemiColon;
 expression: 

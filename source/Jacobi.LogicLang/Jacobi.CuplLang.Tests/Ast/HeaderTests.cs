@@ -1,18 +1,7 @@
-using FluentAssertions;
-using Jacobi.CuplLang.Ast;
-using static Jacobi.CuplLang.Parser.CuplParser;
-
-namespace Jacobi.CuplLang.Tests
+namespace Jacobi.CuplLang.Tests.Ast
 {
     public class HeaderTests
     {
-        private FileContext ParseFile(string cupl)
-        {
-            var compiler = new Compiler();
-            var ctx = compiler.Parse(cupl, nameof(HeaderTests));
-            return ctx;
-        }
-
         [Fact]
         public void HeaderFields()
         {
@@ -27,9 +16,7 @@ namespace Jacobi.CuplLang.Tests
                 "Device             G22V10;"
                 ;
 
-            var ctx = ParseFile(cupl);
-            var builder = new AstBuilder();
-            var doc = builder.File(ctx);
+            var doc = CuplParser.ParseDocument(cupl);
 
             doc.Header.Assembly.Should().Be("TestAssembly");
             doc.Header.Date.Should().BeEmpty();
