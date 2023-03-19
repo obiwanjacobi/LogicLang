@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\marc\\source\\repos\\LogicLangEdit\\source\\Jacobi.LogicLang\\Jacobi.CuplLang\\Jacobi.CuplLang.csproj": {}
+    "C:\\Users\\marc\\source\\repos\\LogicLang\\source\\Jacobi.LogicLang\\Jacobi.CuplLang\\Jacobi.CuplLang.csproj": {}
   },
   "projects": {
-    "C:\\Users\\marc\\source\\repos\\LogicLangEdit\\source\\Jacobi.LogicLang\\Jacobi.CuplLang\\Jacobi.CuplLang.csproj": {
+    "C:\\Users\\marc\\source\\repos\\LogicLang\\source\\Jacobi.LogicLang\\Jacobi.CuplLang\\Jacobi.CuplLang.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\marc\\source\\repos\\LogicLangEdit\\source\\Jacobi.LogicLang\\Jacobi.CuplLang\\Jacobi.CuplLang.csproj",
+        "projectUniqueName": "C:\\Users\\marc\\source\\repos\\LogicLang\\source\\Jacobi.LogicLang\\Jacobi.CuplLang\\Jacobi.CuplLang.csproj",
         "projectName": "Jacobi.CuplLang",
-        "projectPath": "C:\\Users\\marc\\source\\repos\\LogicLangEdit\\source\\Jacobi.LogicLang\\Jacobi.CuplLang\\Jacobi.CuplLang.csproj",
+        "projectPath": "C:\\Users\\marc\\source\\repos\\LogicLang\\source\\Jacobi.LogicLang\\Jacobi.CuplLang\\Jacobi.CuplLang.csproj",
         "packagesPath": "C:\\Users\\marc\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\marc\\source\\repos\\LogicLangEdit\\source\\Jacobi.LogicLang\\Jacobi.CuplLang\\obj\\",
+        "outputPath": "C:\\Users\\marc\\source\\repos\\LogicLang\\source\\Jacobi.LogicLang\\Jacobi.CuplLang\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
