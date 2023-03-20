@@ -137,7 +137,7 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
         var pins = new List<AstPin>();
 
         var inverted = context.LogicNot() is not null;
-        var numList = context.numberList()?.Number();
+        var numList = context.numberList()?.Number()!;
         var symbolList = context.symbolList()?.Symbol()!;
 
         // TODO: number of items in numList and symbolList must match
@@ -182,5 +182,74 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
         }
 
         return pins;
+    }
+
+    // equations and expressions
+
+    public override object VisitEquation(EquationContext context)
+    {
+        var expression = (AstExpression)Visit(context.expression());
+
+        return new AstEquation
+        {
+            Append = context.Append() is not null,
+            Symbol = context.Symbol().GetText(),
+            Expression = expression
+        };
+    }
+
+    public override object VisitExpressionBinary(ExpressionBinaryContext context)
+    {
+        var expressions = context.expression();
+        var left = (AstExpression)Visit(expressions[0]);
+        var right = (AstExpression)Visit(expressions[1]);
+        AstOperator op = AstOperator.None;
+
+        var binOp = context.binOp();
+        if (binOp.LogicAnd() is not null)
+            op = AstOperator.And;
+        else if (binOp.LogicOr() is not null)
+            op = AstOperator.Or;
+        else if (binOp.Dollar() is not null)
+            op = AstOperator.Xor;
+
+        return AstExpression.FromOperator(left, op, right);
+    }
+
+    public override object VisitExpressionUnaryPrefix(ExpressionUnaryPrefixContext context)
+    {
+        var expression = (AstExpression)Visit(context.expression());
+        return AstExpression.FromOperator(expression);
+    }
+
+    public override object VisitExpressionIdentifier(ExpressionIdentifierContext context)
+        => AstExpression.FromSymbol(context.Symbol().GetText());
+
+    public override object VisitExpressionNumber(ExpressionNumberContext context)
+    {
+        if (context.DontCareNumber() is not null)
+            throw new NotImplementedException("Dont-Care numbers are not implemented yet.");
+
+        AstBitValue value;
+        var numTxt = context.Number().GetText();
+        if (context.PrefixBinary() is not null)
+            value = AstBitValue.FromBinary(numTxt);
+        else if (context.PrefixOctal() is not null)
+            value = AstBitValue.FromOctal(numTxt);
+        else if (context.PrefixDecimal() is not null)
+            value = AstBitValue.FromDecimal(numTxt);
+        else if (context.PrefixHex() is not null)
+            value = AstBitValue.FromHex(numTxt);
+        else
+            value = AstBitValue.FromDecimal(numTxt);
+
+        return AstExpression.FromNumber(value);
+    }
+
+    public override object VisitExpressionPrecedence(ExpressionPrecedenceContext context)
+    {
+        var expression = (AstExpression)Visit(context.expression());
+        expression.Precedence = true;
+        return expression;
     }
 }

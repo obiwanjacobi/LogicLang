@@ -1,3 +1,59 @@
+Laws:
+(* and, + or, ! not)
 
+- Annulment:
+When one input is a fixed value and constraints the output to a fixed value.
+A + 1 = 1
+A * 0 = 0
+
+- Identity:
+When one input is a fixed value and the resulting output reflects the value of the other input.
+A + 0 = A
+A * 1 = A
+
+- Idempotent
+When both inputs receive their value from the same origin and that origin is reflected in the output.
+A + A = A
+A * A = A
+
+- Complement
+When one input receives the inverse of the other input.
+A + !A = 1
+A * !A = 0
+
+- Double Negation
+When an input is inverted an even amount of time, the original value is at its output.
+!(!A) = A
+
+-Associative
+And an Or are associative. Multiple inputs in any order always result in the same output.
+A + (B + C) = (A + B) + C
+A * (B * C) = (A * B) * C
+
+- Communatative
+And and Or are communatative. Inputs can be swapped without changes to the output.
+A + B = B + A
+A * B = B * A
+
+- Distributive
+Or:  A * (B + C) = (A * B) + (A * C)
+And: A + (B * C) = (A + B) * (A + C)
+Factorization is the opposite.
+
+- Absorptive
+A + (A * B) = A
+A * (A + B) = A
+
+- DeMorgan's theorum
+Inverting the inputs and the operation creates the same result
+"The complement of the product of 2 vars equals the sum of their complements"
+!(A * B) = !A + !B
+"The complement of the sum of 2 vars equals the product of their complements"
+!(A + B) = !A * !B
+
+Excercies:
+https://www.youtube.com/watch?v=XMCW6NFLMsg
+
+----
 
 Optimization: Quine-McCluskey algorithm
