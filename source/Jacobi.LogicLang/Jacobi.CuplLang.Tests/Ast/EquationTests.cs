@@ -1,3 +1,5 @@
+using Jacobi.CuplLang.Ast;
+
 namespace Jacobi.CuplLang.Tests.Ast
 {
     public class EquationTests
@@ -20,7 +22,8 @@ namespace Jacobi.CuplLang.Tests.Ast
 
             var expr = equation.Expression;
             expr.Should().NotBeNull();
-            expr.Kind.Should().Be(CuplLang.Ast.AstExpressionKind.UniOperator);
+            expr.Kind.Should().Be(AstExpressionKind.UniOperator);
+            expr.Operator.Should().Be(AstOperator.Not);
             expr.Left!.Symbol.Should().Be("Symbol1");
         }
     }
