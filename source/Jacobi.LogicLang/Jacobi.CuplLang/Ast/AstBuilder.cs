@@ -116,7 +116,7 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
 
     // Pins
 
-    public override object VisitPinSimple(PinSimpleContext context)
+    public override object VisitPinSingle(PinSingleContext context)
     {
         var inverted = context.LogicNot() is not null;
         var numTxt = context.Number()?.GetText();

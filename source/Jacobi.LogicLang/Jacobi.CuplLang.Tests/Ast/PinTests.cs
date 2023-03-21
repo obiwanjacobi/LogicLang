@@ -3,7 +3,7 @@ namespace Jacobi.CuplLang.Tests.Ast
     public class PinTests
     {
         [Fact]
-        public void SimplePin()
+        public void SinglePin()
         {
             const string cupl =
                 "Device G22V10;" +

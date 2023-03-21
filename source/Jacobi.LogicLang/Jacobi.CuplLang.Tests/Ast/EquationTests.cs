@@ -21,7 +21,7 @@ namespace Jacobi.CuplLang.Tests.Ast
             var expr = equation.Expression;
             expr.Should().NotBeNull();
             expr.Kind.Should().Be(CuplLang.Ast.AstExpressionKind.UniOperator);
-            expr.Symbol.Should().Be("Symbol1");
+            expr.Left!.Symbol.Should().Be("Symbol1");
         }
     }
 }

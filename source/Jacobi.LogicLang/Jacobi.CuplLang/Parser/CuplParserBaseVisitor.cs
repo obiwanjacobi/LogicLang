@@ -176,7 +176,7 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitPin([NotNull] CuplParser.PinContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.pinSimple"/>.
+	/// Visit a parse tree produced by <see cref="CuplParser.pinSingle"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -184,7 +184,7 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPinSimple([NotNull] CuplParser.PinSimpleContext context) { return VisitChildren(context); }
+	public virtual Result VisitPinSingle([NotNull] CuplParser.PinSingleContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="CuplParser.pinList"/>.
 	/// <para>

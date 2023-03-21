@@ -117,11 +117,11 @@ public interface ICuplParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitPin([NotNull] CuplParser.PinContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.pinSimple"/>.
+	/// Visit a parse tree produced by <see cref="CuplParser.pinSingle"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitPinSimple([NotNull] CuplParser.PinSimpleContext context);
+	Result VisitPinSingle([NotNull] CuplParser.PinSingleContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="CuplParser.pinList"/>.
 	/// </summary>
