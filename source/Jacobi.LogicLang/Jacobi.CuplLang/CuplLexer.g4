@@ -25,7 +25,7 @@ Append: (A P P E N D);
 // extensions
 Extension: D | (O E) | (A R) | (S P);
 
-Symbol: ALPHA+ DIGIT10*;
+Symbol: ALPHA (ALPHA | DIGIT10 | Underscore)*;
 Number: (DIGIT10)+;
 DontCareNumber: (DIGIT2 | X)+;
 
@@ -94,6 +94,7 @@ ParenOpen: '(';
 ParenClose: ')';
 Dollar: '$';
 Quote: '\'';
+Underscore: '_';
 
 // ignore whitespace and line endings
 WS: [ \t\r\n]+ -> skip;

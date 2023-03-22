@@ -9,6 +9,13 @@ internal struct AstSymbol
     private readonly string _name;
     private readonly int? _digits;
 
+    public AstSymbol(string name, int digits)
+    {
+        _name = name;
+        _digits = digits;
+        _symbol = $"{_name}{_digits}";
+    }
+
     public AstSymbol(string symbol)
     { 
         _symbol = symbol;

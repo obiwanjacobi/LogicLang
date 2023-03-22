@@ -1,4 +1,5 @@
-﻿using Antlr4.Runtime;
+﻿using System.Linq;
+using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using Jacobi.CuplLang.Parser;
@@ -72,7 +73,7 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
                     pins.AddRange((IEnumerable<AstPin>)VisitPin(ctx));
                     break;
                 case EquationContext ctx:
-                    equations.Add((AstEquation)VisitEquation(ctx));
+                    equations.AddRange((IEnumerable<AstEquation>)VisitEquation(ctx));
                     break;
             }
         }
@@ -211,27 +212,31 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
     public override object VisitPinRange(PinRangeContext context)
     {
         var pins = new List<AstPin>();
-
         var inverted = context.LogicNot() is not null;
         var numRng = context.numberRange().Number();
-        var symbolRng = context.symbolRange();
-        var symbol = new AstSymbol(symbolRng.Symbol().GetText());
-        var numTxt = symbolRng.Number().GetText()!;
-        var pinNumbers = Enumerable.Range(Int32.Parse(numRng[0].GetText()), Int32.Parse(numRng[1].GetText())).ToArray();
-        var symbolNumbers = Enumerable.Range(symbol.Digits.Value, Int32.Parse(numTxt)).ToArray();
+        // TODO: does not support reversed ranges (from hi to lo).
+        var start = Int32.Parse(numRng[0].GetText());
+        var count = Int32.Parse(numRng[1].GetText()) - start + 1;
+        var pinNumbers = Enumerable.Range(start, count).ToArray();
+        var symbols = (AstSymbol[])VisitSymbolRange(context.symbolRange());
 
-        // TODO: check span of both ranges are the same
-
-        for (int i = 0; i < pinNumbers.Length; i++)
+        if (pinNumbers.Length != symbols.Length)
         {
-            pins.Add(new AstPin
-            {
-                PinNumber = pinNumbers[i],
-                Symbol = $"{symbol.Name}{symbolNumbers[i]}",
-                Inverted = inverted
-            });
+            Diagnostics.Add(new Diagnostic(context.Start.Line, context.Start.Column, 
+                $"Number of Pin name Symbols ({symbols.Length}) and the number of Pin numbers ({pinNumbers.Length}) mismatch."));
         }
-
+        else
+        {
+            for (int i = 0; i < pinNumbers.Length; i++)
+            {
+                pins.Add(new AstPin
+                {
+                    PinNumber = pinNumbers[i],
+                    Symbol = symbols[i].Value,
+                    Inverted = inverted
+                });
+            }
+        }
         return pins;
     }
 
@@ -240,13 +245,50 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
     public override object VisitEquation(EquationContext context)
     {
         var expression = (AstExpression)Visit(context.expression());
+        var symbols = (AstSymbol[])VisitSymbol(context.symbol());
+        var append = context.Append() is not null;
 
-        return new AstEquation
+        return symbols.Select(symbol => new AstEquation
         {
-            Append = context.Append() is not null,
-            Symbol = context.Symbol().GetText(),
+            Append = append,
+            Symbol = symbol.Value,
             Expression = expression
-        };
+        });
+    }
+
+    // returns: AstSymbol[]
+    public override object VisitSymbol(SymbolContext context)
+    {
+        var symbol = context.Symbol();
+        if (symbol is not null)
+            return new[] { new AstSymbol(symbol.GetText()) };
+
+        var symbolList = context.symbolList();
+        if (symbolList is not null)
+            return VisitSymbolList(symbolList);
+
+        var symbolRange = context.symbolRange();
+        if (symbolRange is not null)
+            return VisitSymbolRange(symbolRange);
+
+        return null;
+    }
+
+    public override object VisitSymbolList(SymbolListContext context)
+        => context.Symbol().Select(sym => new AstSymbol(sym.GetText())).ToArray();
+
+    public override object VisitSymbolRange(SymbolRangeContext context)
+    {
+        var symbol = new AstSymbol(context.Symbol().GetText());
+        var numTxt = context.Number().GetText()!;
+        // TODO: does not support reversed ranges (from hi to lo).
+        var count = Int32.Parse(numTxt) - symbol.Digits.Value + 1;
+        var symbolNumbers = Enumerable.Range(symbol.Digits.Value, count)
+            .Skip(1).ToArray();
+
+        var symbols = new List<AstSymbol> { symbol };
+        symbols.AddRange(symbolNumbers.Select(symNo => new AstSymbol(symbol.Name, symNo)));
+        return symbols.ToArray();
     }
 
     public override object VisitExpressionBinary(ExpressionBinaryContext context)
@@ -276,16 +318,16 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
     public override object VisitExpressionSymbol(ExpressionSymbolContext context)
         => AstExpression.FromSymbol(context.Symbol().GetText());
 
-    public override object VisitBinNumber([NotNull] BinNumberContext context)
+    public override object VisitBinNumber(BinNumberContext context)
         => AstExpression.FromNumber(AstBitValue.FromBinary(context.BinNumber().GetText()));
 
-    public override object VisitOctNumber([NotNull] OctNumberContext context)
+    public override object VisitOctNumber(OctNumberContext context)
         => AstExpression.FromNumber(AstBitValue.FromOctal(context.OctNumber().GetText()));
 
-    public override object VisitDecNumber([NotNull] DecNumberContext context)
+    public override object VisitDecNumber(DecNumberContext context)
         => AstExpression.FromNumber(AstBitValue.FromDecimal(context.Number().GetText()));
 
-    public override object VisitHexNumber([NotNull] HexNumberContext context)
+    public override object VisitHexNumber(HexNumberContext context)
         => AstExpression.FromNumber(AstBitValue.FromHex(context.HexNumber().GetText()));
 
     public override object VisitExpressionPrecedence(ExpressionPrecedenceContext context)

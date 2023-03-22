@@ -25,7 +25,8 @@ numberRange: BracketOpen Number Range Number BracketClose;
 symbolList: BracketOpen Symbol (Comma Symbol)* BracketClose;
 symbolRange: BracketOpen Symbol Range Number BracketClose;
 
-equation: Append? LogicNot? Symbol extension? Eq expression SemiColon;
+equation: Append? LogicNot? symbol extension? Eq expression SemiColon;
+symbol: Symbol | symbolList | symbolRange;
 expression: 
     expression binOp expression                 #expressionBinary
     | uniOp expression                          #expressionUnaryPrefix

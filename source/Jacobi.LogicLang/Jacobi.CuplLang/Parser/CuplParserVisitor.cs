@@ -165,6 +165,12 @@ public interface ICuplParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitEquation([NotNull] CuplParser.EquationContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="CuplParser.symbol"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSymbol([NotNull] CuplParser.SymbolContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionUnaryPrefix</c>
 	/// labeled alternative in <see cref="CuplParser.expression"/>.
 	/// </summary>

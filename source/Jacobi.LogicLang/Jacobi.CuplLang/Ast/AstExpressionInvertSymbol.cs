@@ -1,34 +1,33 @@
-﻿namespace Jacobi.CuplLang.Ast
+﻿namespace Jacobi.CuplLang.Ast;
+
+internal sealed class AstExpressionInvertSymbol : AstExpressionRewriter
 {
-    internal sealed class AstExpressionInvertSymbol : AstExpressionRewriter
+    private readonly string _symbol;
+
+    public AstExpressionInvertSymbol(string symbol)
+        => _symbol = symbol;
+
+    protected override AstExpression RewriteUnaryOperator(AstExpression expression)
     {
-        private readonly string _symbol;
+        var expr = base.RewriteUnaryOperator(expression);
 
-        public AstExpressionInvertSymbol(string symbol)
-            => _symbol = symbol;
-
-        protected override AstExpression RewriteUnaryOperator(AstExpression expression)
+        // remove double not operators
+        if (expr.Operator == AstOperator.Not &&
+            expr.Left!.Operator == AstOperator.Not)
         {
-            var expr = base.RewriteUnaryOperator(expression);
-
-            // remove double not operators
-            if (expr.Operator == AstOperator.Not &&
-                expr.Left!.Operator == AstOperator.Not)
-            {
-                return expr.Left!.Left!;
-            }
-
-            return expr;
+            return expr.Left!.Left!;
         }
 
-        protected override AstExpression RewriteSymbol(AstExpression expression)
-        {
-            if (expression.Symbol == _symbol)
-            {
-                return AstExpression.FromOperator(expression, AstOperator.Not);
-            }
+        return expr;
+    }
 
-            return expression;
+    protected override AstExpression RewriteSymbol(AstExpression expression)
+    {
+        if (expression.Symbol == _symbol)
+        {
+            return AstExpression.FromOperator(expression, AstOperator.Not);
         }
+
+        return expression;
     }
 }
