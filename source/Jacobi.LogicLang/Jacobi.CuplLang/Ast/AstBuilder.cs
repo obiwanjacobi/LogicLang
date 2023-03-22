@@ -219,7 +219,7 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
     public override object VisitExpressionUnaryPrefix(ExpressionUnaryPrefixContext context)
     {
         var expression = (AstExpression)Visit(context.expression());
-        return AstExpression.FromOperator(expression);
+        return AstExpression.FromOperator(expression, AstOperator.Not);
     }
 
     public override object VisitExpressionIdentifier(ExpressionIdentifierContext context)

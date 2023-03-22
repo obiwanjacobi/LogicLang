@@ -56,9 +56,17 @@
         public static AstExpression FromNumber(AstBitValue value)
             => new(AstExpressionKind.Number) { Number = value };
         public static AstExpression FromOperator(AstExpression left, AstOperator op, AstExpression right)
-            => new(AstExpressionKind.BinOperator) { Left = left, Operator = op, Right = right };
-        public static AstExpression FromOperator(AstExpression expression)
-            => new(AstExpressionKind.UniOperator) { Left = expression, Operator = AstOperator.Not };
+        {
+            if (op is not AstOperator.And and not AstOperator.Or and not AstOperator.Xor)
+                throw new ArgumentException($"Operator '{op}' is not a binary operator.", nameof(op));
+            return new(AstExpressionKind.BinOperator) { Left = left, Operator = op, Right = right };
+        }
+        public static AstExpression FromOperator(AstExpression expression, AstOperator op)
+        {
+            if (op is not AstOperator.Not)
+                throw new ArgumentException($"Operator '{op}' is not a unary operator.", nameof(op));
+            return new(AstExpressionKind.UniOperator) { Left = expression, Operator = op };
+        }
         public static AstExpression FromSymbol(string symbol)
             => new(AstExpressionKind.Symbol) { Symbol = symbol };
 
