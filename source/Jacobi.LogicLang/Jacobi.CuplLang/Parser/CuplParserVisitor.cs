@@ -165,13 +165,6 @@ public interface ICuplParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitEquation([NotNull] CuplParser.EquationContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>expressionIdentifier</c>
-	/// labeled alternative in <see cref="CuplParser.expression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitExpressionIdentifier([NotNull] CuplParser.ExpressionIdentifierContext context);
-	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionUnaryPrefix</c>
 	/// labeled alternative in <see cref="CuplParser.expression"/>.
 	/// </summary>
@@ -186,6 +179,13 @@ public interface ICuplParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExpressionNumber([NotNull] CuplParser.ExpressionNumberContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionSymbol</c>
+	/// labeled alternative in <see cref="CuplParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionSymbol([NotNull] CuplParser.ExpressionSymbolContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionBinary</c>
 	/// labeled alternative in <see cref="CuplParser.expression"/>.
 	/// </summary>
@@ -199,6 +199,42 @@ public interface ICuplParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitExpressionPrecedence([NotNull] CuplParser.ExpressionPrecedenceContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="CuplParser.number"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitNumber([NotNull] CuplParser.NumberContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="CuplParser.binNumber"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBinNumber([NotNull] CuplParser.BinNumberContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="CuplParser.octNumber"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOctNumber([NotNull] CuplParser.OctNumberContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="CuplParser.decNumber"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitDecNumber([NotNull] CuplParser.DecNumberContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="CuplParser.hexNumber"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitHexNumber([NotNull] CuplParser.HexNumberContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="CuplParser.dontCareNumber"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitDontCareNumber([NotNull] CuplParser.DontCareNumberContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="CuplParser.extension"/>.
 	/// </summary>

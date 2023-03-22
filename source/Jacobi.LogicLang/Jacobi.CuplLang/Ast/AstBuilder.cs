@@ -1,10 +1,42 @@
-﻿using Jacobi.CuplLang.Parser;
+﻿using Antlr4.Runtime.Misc;
+using Antlr4.Runtime.Tree;
+using Jacobi.CuplLang.Parser;
 using static Jacobi.CuplLang.Parser.CuplParser;
 
 namespace Jacobi.CuplLang.Ast;
 
 internal sealed class AstBuilder : CuplParserBaseVisitor<object>
 {
+    public List<Diagnostic> Diagnostics = new();
+
+#if DEBUG
+    protected override object AggregateResult(object aggregate, object nextResult)
+    {
+        if (nextResult is null)
+            return aggregate;
+        if (aggregate is null)
+            return nextResult;
+
+        throw new InvalidOperationException("Aggregation of multiple return values is not implemented.");
+    }
+
+    public override object VisitChildren(IRuleNode node)
+    {
+        return base.VisitChildren(node);
+    }
+#endif
+
+    public override object VisitErrorNode(IErrorNode node)
+    {
+        Diagnostics.Add(new Diagnostic(
+            node.Symbol.Line,
+            node.Symbol.Column,
+            node.GetText()
+        ));
+
+        return null;
+    }
+
     public AstDocument File(FileContext context)
     {
         var header = new AstHeader();
@@ -29,6 +61,7 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
 
         return new AstDocument()
         {
+            Diagnostics = Diagnostics,
             Header = header,
             Pins = pins,
             Equations = equations
@@ -222,29 +255,20 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
         return AstExpression.FromOperator(expression, AstOperator.Not);
     }
 
-    public override object VisitExpressionIdentifier(ExpressionIdentifierContext context)
+    public override object VisitExpressionSymbol(ExpressionSymbolContext context)
         => AstExpression.FromSymbol(context.Symbol().GetText());
 
-    public override object VisitExpressionNumber(ExpressionNumberContext context)
-    {
-        if (context.DontCareNumber() is not null)
-            throw new NotImplementedException("Dont-Care numbers are not implemented yet.");
+    public override object VisitBinNumber([NotNull] BinNumberContext context)
+        => AstExpression.FromNumber(AstBitValue.FromBinary(context.BinNumber().GetText()));
 
-        AstBitValue value;
-        var numTxt = context.Number().GetText();
-        if (context.PrefixBinary() is not null)
-            value = AstBitValue.FromBinary(numTxt);
-        else if (context.PrefixOctal() is not null)
-            value = AstBitValue.FromOctal(numTxt);
-        else if (context.PrefixDecimal() is not null)
-            value = AstBitValue.FromDecimal(numTxt);
-        else if (context.PrefixHex() is not null)
-            value = AstBitValue.FromHex(numTxt);
-        else
-            value = AstBitValue.FromDecimal(numTxt);
+    public override object VisitOctNumber([NotNull] OctNumberContext context)
+        => AstExpression.FromNumber(AstBitValue.FromOctal(context.OctNumber().GetText()));
 
-        return AstExpression.FromNumber(value);
-    }
+    public override object VisitDecNumber([NotNull] DecNumberContext context)
+        => AstExpression.FromNumber(AstBitValue.FromDecimal(context.Number().GetText()));
+
+    public override object VisitHexNumber([NotNull] HexNumberContext context)
+        => AstExpression.FromNumber(AstBitValue.FromHex(context.HexNumber().GetText()));
 
     public override object VisitExpressionPrecedence(ExpressionPrecedenceContext context)
     {

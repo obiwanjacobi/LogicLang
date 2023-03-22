@@ -7,4 +7,6 @@ internal class AstDocument
     public IReadOnlyList<AstPin> Pins { get; set; } = new List<AstPin>();
 
     public IReadOnlyList<AstEquation> Equations { get; set; } = new List<AstEquation>();
+    
+    public IReadOnlyList<Diagnostic> Diagnostics { get; set; } = new List<Diagnostic>();
 }

@@ -6,6 +6,11 @@ namespace Jacobi.CuplLang;
 
 internal class Compiler
 {
+    private readonly List<Diagnostic> _diagnostics = new();
+
+    public IReadOnlyList<Diagnostic> Diagnostics
+        => _diagnostics;
+
     public FileContext Parse(string cupl, string sourceName = "")
     {
         var inputStream = new AntlrInputStream(cupl)

@@ -1,7 +1,7 @@
 parser grammar CuplParser;
 options { tokenVocab=CuplLexer; }
 
-file: header pin* equation*;
+file: header pin* equation* EOF;
 header: (assembly | company | date | designer | device | format | location | name | partno | revision)*;
 
 assembly: Assembly freeText EndUseSpaces;
@@ -30,9 +30,15 @@ expression:
     expression binOp expression                 #expressionBinary
     | uniOp expression                          #expressionUnaryPrefix
     | ParenOpen expression ParenClose           #expressionPrecedence
-    | Symbol                                    #expressionIdentifier
-    | (PrefixHex | PrefixBinary | PrefixDecimal | PrefixOctal)? (Number | DontCareNumber)  #expressionNumber
+    | Symbol                                    #expressionSymbol
+    | number                                    #expressionNumber
     ;
+number: binNumber | octNumber | decNumber | hexNumber | dontCareNumber;
+binNumber: PrefixBinary BinNumber;
+octNumber: PrefixOctal OctNumber;
+decNumber: PrefixDecimal? Number;
+hexNumber: PrefixHex HexNumber;
+dontCareNumber: PrefixBinary DontCareNumber;
 extension: Dot Extension;
 binOp: (LogicAnd | LogicOr | Dollar /*XOR*/);
 uniOp: LogicNot;

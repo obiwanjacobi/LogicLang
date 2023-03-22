@@ -17,6 +17,8 @@ namespace Jacobi.CuplLang.Tests.Ast
             var ctx = ParseFile(cupl);
             var builder = new AstBuilder();
             var doc = builder.File(ctx);
+
+            doc.Diagnostics.Should().BeEmpty();
             return doc;
         }
     }

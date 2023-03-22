@@ -1,4 +1,6 @@
 Laws:
+https://dev.to/carlhugom/boolean-algebra-laws-with-c-2hgb
+
 (* and, + or, ! not)
 
 - Annulment:
@@ -56,4 +58,10 @@ https://www.youtube.com/watch?v=XMCW6NFLMsg
 
 ----
 
-Optimization: Quine-McCluskey algorithm
+Optimization: 
+
+Boolean algebra (laws)
+https://github.com/iamareebjamal/boolean-minimizer/blob/master/src/parser/Simplify.java
+
+- Quine-McCluskey algorithm
+https://github.com/0110G/QuineMccluskey-Minimization/blob/master/QuineMcCluskey.cpp
