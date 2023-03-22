@@ -1,4 +1,5 @@
-﻿using Antlr4.Runtime.Misc;
+﻿using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using Jacobi.CuplLang.Parser;
 using static Jacobi.CuplLang.Parser.CuplParser;
@@ -17,7 +18,8 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
         if (aggregate is null)
             return nextResult;
 
-        throw new InvalidOperationException("Aggregation of multiple return values is not implemented.");
+        throw new InvalidOperationException(
+            "Aggregation of multiple return values is not implemented.");
     }
 
     public override object VisitChildren(IRuleNode node)
@@ -25,6 +27,22 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
         return base.VisitChildren(node);
     }
 #endif
+
+    protected override bool ShouldVisitNextChild(IRuleNode node, object? currentResult)
+    {
+        if (node is ParserRuleContext context &&
+            context.exception is not null)
+        {
+            Diagnostics.Add(new Diagnostic(
+                context.Start.Line,
+                context.Start.Column,
+                context.GetText()
+            ));
+            // usually pointless to continue
+            return false;
+        }
+        return true;
+    }
 
     public override object VisitErrorNode(IErrorNode node)
     {
