@@ -4,6 +4,8 @@ namespace Jacobi.CuplLang.Ast;
 
 internal abstract class AstExpressionRewriter
 {
+    public int OperationsPerformed { get; protected set; }
+
     public virtual AstExpression Rewrite(AstExpression expression)
     {
         var expr = expression.Kind switch
@@ -24,6 +26,7 @@ internal abstract class AstExpressionRewriter
         if (left == expression.Left)
             return expression;
 
+        OperationsPerformed++;
         return AstExpression.FromOperator(left, AstOperator.Not);
     }
 
@@ -35,6 +38,7 @@ internal abstract class AstExpressionRewriter
         if (left == expression.Left && right == expression.Right)
             return expression;
 
+        OperationsPerformed++;
         return AstExpression.FromOperator(left, expression.Operator, right);
     }
 

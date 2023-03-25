@@ -20,8 +20,28 @@ internal class Compiler
         var lexer = new CuplLexer(inputStream);
         var tokens = new CommonTokenStream(lexer);
         var parser = new CuplParser(tokens);
-
+        parser.AddErrorListener(new DiagnosticErrorListener(_diagnostics));
+#if DEBUG
+        parser.AddErrorListener(new Antlr4.Runtime.DiagnosticErrorListener());
+#endif
+        // TODO: Error handling
         var context = parser.file();
         return context;
+    }
+}
+
+internal sealed class DiagnosticErrorListener : IAntlrErrorListener<IToken>
+{
+    private readonly List<Diagnostic> _diagnostics;
+
+    public DiagnosticErrorListener(List<Diagnostic> diagnostics)
+        => _diagnostics = diagnostics;
+
+    public void SyntaxError(TextWriter output, IRecognizer recognizer, 
+        IToken offendingSymbol, int line, int charPositionInLine, string msg, 
+        RecognitionException e)
+    {
+        _diagnostics.Add(new Diagnostic(line, charPositionInLine,
+            $"Syntax Error: {e.GetType().Name}: {msg} ({line}:{charPositionInLine}).\nToken: {offendingSymbol})"));
     }
 }

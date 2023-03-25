@@ -1,2 +1,2 @@
 Device   G22V10;
-[x, y] = 0;
+x = D & A1 # B3;

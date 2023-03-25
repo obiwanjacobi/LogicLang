@@ -22,9 +22,6 @@ FormatName: J;
 Pin: (P I N);
 Append: (A P P E N D);
 
-// extensions
-Extension: D | (O E) | (A R) | (S P);
-
 Symbol: ALPHA (ALPHA | DIGIT10 | Underscore)*;
 Number: (DIGIT10)+;
 DontCareNumber: (DIGIT2 | X)+;
@@ -33,6 +30,9 @@ PrefixHex: Quote H Quote -> mode(HexNumberMode);
 PrefixOctal: Quote O Quote -> mode(OctNumberMode);
 PrefixDecimal: Quote D Quote;
 PrefixBinary: Quote B Quote -> mode(BinNumberMode);
+
+// extensions
+Extension: D | (O E) | (A R) | (S P);
 
 fragment ALPHA: [a-zA-Z];
 fragment DIGIT2: [01];

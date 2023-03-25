@@ -24,7 +24,7 @@ internal static class AstExpressionLaws
     public static bool TryIdempotent(AstExpression expression, [NotNullWhen(true)] out AstExpression? result)
     {
         if (IsBinaryLawOperator(expression) &&
-            expression.Left!.ToString() == expression.Right!.ToString())
+            expression.Left!.Equals(expression.Right!))
         {
             result = expression.Left;
             return true;
@@ -66,7 +66,7 @@ internal static class AstExpressionLaws
 
     public static bool TryCommunatativeSwap(AstExpression expression, [NotNullWhen(true)] out AstExpression? result)
     {
-        if (expression.Kind == AstExpressionKind.BinOperator)
+        if (IsBinaryLawOperator(expression))
         {
             result = AstExpression.FromOperator(expression.Right!, expression.Operator, expression.Left!);
             return true;
@@ -78,7 +78,7 @@ internal static class AstExpressionLaws
 
     public static bool TryCommunatativeSort(AstExpression expression, [NotNullWhen(true)] out AstExpression? result)
     {
-        if (expression.Kind == AstExpressionKind.BinOperator &&
+        if (IsBinaryLawOperator(expression) &&
             expression.Left!.IsSymbol() && expression.Right!.IsSymbol() &&
             String.Compare(expression.Left!.Symbol, expression.Right!.Symbol) > 0)
         {
@@ -88,6 +88,14 @@ internal static class AstExpressionLaws
 
         result = null;
         return false;
+    }
+
+    public static AstExpression CommunatativeSort(AstExpression expression)
+    {
+        if (TryCommunatativeSort(expression, out var result))
+            return result;
+        
+        return expression;
     }
 
     public static bool TrySkipNotExpression(AstExpression expression, [NotNullWhen(true)] out AstExpression? result)

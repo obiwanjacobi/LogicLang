@@ -4,6 +4,9 @@ internal struct Location
 {
     public int Line;
     public int Col;
+
+    public override string ToString()
+        => $"{Line}:{Col}";
 }
 
 internal sealed class Diagnostic
