@@ -1,9 +1,14 @@
 using Jacobi.CuplLang.Ast;
+using Xunit.Abstractions;
 
 namespace Jacobi.CuplLang.Tests.Ast
 {
     public class EquationTests
     {
+        private readonly ITestOutputHelper _output;
+        public EquationTests(ITestOutputHelper output)
+            => _output = output;
+
         [Fact]
         public void Symbol()
         {
@@ -12,7 +17,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "x = !Symbol1;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             doc.Equations.Should().HaveCount(1);
             var equation = doc.Equations[0];
@@ -34,7 +39,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "[x, y] = Symbol1;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             doc.Equations.Should().HaveCount(2);
             var equation = doc.Equations[0];
@@ -62,7 +67,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "[x0..2] = Symbol1;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             doc.Equations.Should().HaveCount(3);
             var equation = doc.Equations[0];
@@ -99,7 +104,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "x = Symbol2;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
             doc.Equations.Should().HaveCount(2);
             
             var appender = new AstEquationAppender();
@@ -117,7 +122,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "Append x = Symbol2;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
             doc.Equations.Should().HaveCount(2);
 
             var appender = new AstEquationAppender();

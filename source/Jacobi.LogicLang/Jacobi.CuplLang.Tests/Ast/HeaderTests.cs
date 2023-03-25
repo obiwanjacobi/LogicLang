@@ -1,7 +1,13 @@
+using Xunit.Abstractions;
+
 namespace Jacobi.CuplLang.Tests.Ast
 {
     public class HeaderTests
     {
+        private readonly ITestOutputHelper _output;
+        public HeaderTests(ITestOutputHelper output)
+            => _output = output;
+
         [Fact]
         public void HeaderFields()
         {
@@ -16,7 +22,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "Device             G22V10;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             doc.Header.Assembly.Should().Be("TestAssembly");
             doc.Header.Date.Should().BeEmpty();

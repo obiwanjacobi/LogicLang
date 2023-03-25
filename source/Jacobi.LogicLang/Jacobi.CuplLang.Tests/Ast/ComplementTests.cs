@@ -1,9 +1,14 @@
 using Jacobi.CuplLang.Ast;
+using Xunit.Abstractions;
 
 namespace Jacobi.CuplLang.Tests.Ast;
 
 public class ComplementTests
 {
+    private readonly ITestOutputHelper _output;
+    public ComplementTests(ITestOutputHelper output)
+        => _output = output;
+
     [Fact]
     public void TryComplement_Or_Symbol()
     {
@@ -12,7 +17,7 @@ public class ComplementTests
             "x = A # !A;"
             ;
 
-        var doc = CuplParser.ParseDocument(cupl);
+        var doc = CuplParser.ParseDocument(cupl, _output);
         var equation = doc.Equations[0];
         var expression = equation.Expression;
         expression.Kind.Should().Be(AstExpressionKind.BinOperator);
@@ -31,7 +36,7 @@ public class ComplementTests
             "x = A & !A;"
             ;
 
-        var doc = CuplParser.ParseDocument(cupl);
+        var doc = CuplParser.ParseDocument(cupl, _output);
         var equation = doc.Equations[0];
         var expression = equation.Expression;
         expression.Kind.Should().Be(AstExpressionKind.BinOperator);
@@ -50,7 +55,7 @@ public class ComplementTests
             "x = (A & B) # !(A&B);"
             ;
 
-        var doc = CuplParser.ParseDocument(cupl);
+        var doc = CuplParser.ParseDocument(cupl, _output);
         var equation = doc.Equations[0];
         var expression = equation.Expression;
         expression.Kind.Should().Be(AstExpressionKind.BinOperator);
@@ -69,7 +74,7 @@ public class ComplementTests
             "x = (A # B) & !(A#B);"
             ;
 
-        var doc = CuplParser.ParseDocument(cupl);
+        var doc = CuplParser.ParseDocument(cupl, _output);
         var equation = doc.Equations[0];
         var expression = equation.Expression;
         expression.Kind.Should().Be(AstExpressionKind.BinOperator);

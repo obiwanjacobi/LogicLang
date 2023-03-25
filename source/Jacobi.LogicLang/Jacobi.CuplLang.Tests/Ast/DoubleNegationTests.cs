@@ -1,9 +1,14 @@
 using Jacobi.CuplLang.Ast;
+using Xunit.Abstractions;
 
 namespace Jacobi.CuplLang.Tests.Ast;
 
 public class DoubleNegationTests
 {
+    private readonly ITestOutputHelper _output;
+    public DoubleNegationTests(ITestOutputHelper output)
+        => _output = output;
+
     [Fact]
     public void TryDoubleNegation_Symbol()
     {
@@ -12,7 +17,7 @@ public class DoubleNegationTests
             "x = !(!A);"
             ;
 
-        var doc = CuplParser.ParseDocument(cupl);
+        var doc = CuplParser.ParseDocument(cupl, _output);
         var equation = doc.Equations[0];
         var expression = equation.Expression;
         expression.Kind.Should().Be(AstExpressionKind.UniOperator);
@@ -31,7 +36,7 @@ public class DoubleNegationTests
             "x = !(!(A & B));"
             ;
 
-        var doc = CuplParser.ParseDocument(cupl);
+        var doc = CuplParser.ParseDocument(cupl, _output);
         var equation = doc.Equations[0];
         var expression = equation.Expression;
         expression.Kind.Should().Be(AstExpressionKind.UniOperator);

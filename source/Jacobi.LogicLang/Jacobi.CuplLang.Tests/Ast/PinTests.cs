@@ -1,7 +1,13 @@
+using Xunit.Abstractions;
+
 namespace Jacobi.CuplLang.Tests.Ast
 {
     public class PinTests
     {
+        private readonly ITestOutputHelper _output;
+        public PinTests(ITestOutputHelper output)
+            => _output = output;
+
         [Fact]
         public void SinglePin()
         {
@@ -11,7 +17,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "PIN 11  = Symbol11;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             doc.Pins.Should().HaveCount(2);
             var pin = doc.Pins[0];
@@ -33,7 +39,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "PIN [1, 11]   = ![Symbol1, Symbol11];"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             doc.Pins.Should().HaveCount(2);
             var pin = doc.Pins[0];
@@ -55,7 +61,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "PIN [1..3]   = ![Symbol1..3];"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             doc.Pins.Should().HaveCount(3);
             var pin = doc.Pins[0];

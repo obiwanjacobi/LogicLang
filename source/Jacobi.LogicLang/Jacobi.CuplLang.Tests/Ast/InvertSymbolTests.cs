@@ -1,9 +1,14 @@
 using Jacobi.CuplLang.Ast;
+using Xunit.Abstractions;
 
 namespace Jacobi.CuplLang.Tests.Ast
 {
     public class InvertSymbolTests
     {
+        private readonly ITestOutputHelper _output;
+        public InvertSymbolTests(ITestOutputHelper output)
+            => _output = output;
+
         [Fact]
         public void Symbol_Invert()
         {
@@ -13,7 +18,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "x = Symbol1;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
             var equation = doc.Equations[0];
 
             var expression = equation.Expression.InvertSymbol("Symbol1");
@@ -31,7 +36,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "x = !Symbol1;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
             var equation = doc.Equations[0];
 
             var expression = equation.Expression.InvertSymbol("Symbol1");

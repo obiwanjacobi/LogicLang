@@ -1,9 +1,14 @@
 using Jacobi.CuplLang.Ast;
+using Xunit.Abstractions;
 
 namespace Jacobi.CuplLang.Tests.Ast
 {
     public class ExpressionTests
     {
+        private readonly ITestOutputHelper _output;
+        public ExpressionTests(ITestOutputHelper output)
+            => _output = output;
+
         [Fact]
         public void Number_Binary()
         {
@@ -12,7 +17,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "x = 'b'10;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             var equation = doc.Equations[0];
             var expression = equation.Expression;
@@ -28,7 +33,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "x = 'O'10;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             var equation = doc.Equations[0];
             var expression = equation.Expression;
@@ -44,7 +49,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "x = 'd'42;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             var equation = doc.Equations[0];
             var expression = equation.Expression;
@@ -60,7 +65,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "x = 'h'FF;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             var equation = doc.Equations[0];
             var expression = equation.Expression;
@@ -76,7 +81,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "x = !(A & B) # A # 0;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             var equation = doc.Equations[0];
             var expression = equation.Expression;
@@ -92,7 +97,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "x = A & B # C;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             var equation = doc.Equations[0];
             var expression = equation.Expression;
@@ -108,7 +113,7 @@ namespace Jacobi.CuplLang.Tests.Ast
                 "x = A # B & C;"
                 ;
 
-            var doc = CuplParser.ParseDocument(cupl);
+            var doc = CuplParser.ParseDocument(cupl, _output);
 
             var equation = doc.Equations[0];
             var expression = equation.Expression;
