@@ -1,4 +1,6 @@
-﻿namespace Jacobi.CuplLang.Device;
+﻿using System;
+
+namespace Jacobi.CuplLang.Device;
 
 internal enum PinDirection
 {

@@ -1,4 +1,6 @@
-﻿using Antlr4.Runtime;
+﻿using System.Collections.Generic;
+using System.IO;
+using Antlr4.Runtime;
 using Jacobi.CuplLang.Parser;
 using static Jacobi.CuplLang.Parser.CuplParser;
 
@@ -37,8 +39,8 @@ internal sealed class DiagnosticErrorListener : IAntlrErrorListener<IToken>
     public DiagnosticErrorListener(List<Diagnostic> diagnostics)
         => _diagnostics = diagnostics;
 
-    public void SyntaxError(TextWriter output, IRecognizer recognizer, 
-        IToken offendingSymbol, int line, int charPositionInLine, string msg, 
+    public void SyntaxError(TextWriter output, IRecognizer recognizer,
+        IToken offendingSymbol, int line, int charPositionInLine, string msg,
         RecognitionException e)
     {
         _diagnostics.Add(new Diagnostic(line, charPositionInLine,

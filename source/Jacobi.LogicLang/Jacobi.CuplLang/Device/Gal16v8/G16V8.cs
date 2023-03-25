@@ -1,4 +1,6 @@
-﻿namespace Jacobi.CuplLang.Device.Gal16V8;
+﻿using System.Collections.Generic;
+
+namespace Jacobi.CuplLang.Device.Gal16V8;
 
 internal class G16V8 : Device
 {

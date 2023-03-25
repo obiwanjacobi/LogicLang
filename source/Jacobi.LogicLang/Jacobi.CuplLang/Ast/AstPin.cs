@@ -1,4 +1,6 @@
-﻿namespace Jacobi.CuplLang.Ast;
+﻿using System;
+
+namespace Jacobi.CuplLang.Ast;
 
 internal class AstPin
 {

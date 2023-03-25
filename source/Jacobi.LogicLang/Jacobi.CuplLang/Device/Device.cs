@@ -1,4 +1,6 @@
-﻿namespace Jacobi.CuplLang.Device;
+﻿using System.Collections.Generic;
+
+namespace Jacobi.CuplLang.Device;
 
 internal enum DeviceMode
 {
