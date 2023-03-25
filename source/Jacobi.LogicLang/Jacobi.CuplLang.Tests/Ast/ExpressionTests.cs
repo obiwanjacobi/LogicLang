@@ -1,3 +1,5 @@
+using Jacobi.CuplLang.Ast;
+
 namespace Jacobi.CuplLang.Tests.Ast
 {
     public class ExpressionTests
