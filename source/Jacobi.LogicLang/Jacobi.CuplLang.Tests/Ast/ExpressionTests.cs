@@ -83,5 +83,37 @@ namespace Jacobi.CuplLang.Tests.Ast
 
             expression.Equals(expression).Should().BeTrue();
         }
+
+        [Fact]
+        public void AndPrecedence1()
+        {
+            const string cupl =
+                "Device G22V10;" +
+                "x = A & B # C;"
+                ;
+
+            var doc = CuplParser.ParseDocument(cupl);
+
+            var equation = doc.Equations[0];
+            var expression = equation.Expression;
+
+            expression.Operator.Should().Be(AstOperator.Or);
+        }
+
+        [Fact]
+        public void AndPrecedence2()
+        {
+            const string cupl =
+                "Device G22V10;" +
+                "x = A # B & C;"
+                ;
+
+            var doc = CuplParser.ParseDocument(cupl);
+
+            var equation = doc.Equations[0];
+            var expression = equation.Expression;
+
+            expression.Operator.Should().Be(AstOperator.Or);
+        }
     }
 }

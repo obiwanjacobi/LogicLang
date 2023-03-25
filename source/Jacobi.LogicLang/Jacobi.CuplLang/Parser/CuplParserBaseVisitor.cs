@@ -266,7 +266,7 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitSymbol([NotNull] CuplParser.SymbolContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>expressionUnaryPrefix</c>
+	/// Visit a parse tree produced by the <c>expressionBinaryOr</c>
 	/// labeled alternative in <see cref="CuplParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -275,7 +275,18 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpressionUnaryPrefix([NotNull] CuplParser.ExpressionUnaryPrefixContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpressionBinaryOr([NotNull] CuplParser.ExpressionBinaryOrContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionBinaryXor</c>
+	/// labeled alternative in <see cref="CuplParser.expression"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitExpressionBinaryXor([NotNull] CuplParser.ExpressionBinaryXorContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionNumber</c>
 	/// labeled alternative in <see cref="CuplParser.expression"/>.
@@ -299,7 +310,7 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitExpressionSymbol([NotNull] CuplParser.ExpressionSymbolContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>expressionBinary</c>
+	/// Visit a parse tree produced by the <c>expressionBinaryAnd</c>
 	/// labeled alternative in <see cref="CuplParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -308,7 +319,18 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpressionBinary([NotNull] CuplParser.ExpressionBinaryContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpressionBinaryAnd([NotNull] CuplParser.ExpressionBinaryAndContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionUnaryNot</c>
+	/// labeled alternative in <see cref="CuplParser.expression"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitExpressionUnaryNot([NotNull] CuplParser.ExpressionUnaryNotContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionPrecedence</c>
 	/// labeled alternative in <see cref="CuplParser.expression"/>.
@@ -390,25 +412,5 @@ public partial class CuplParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	public virtual Result VisitExtension([NotNull] CuplParser.ExtensionContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.binOp"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitBinOp([NotNull] CuplParser.BinOpContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.uniOp"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitUniOp([NotNull] CuplParser.UniOpContext context) { return VisitChildren(context); }
 }
 } // namespace Jacobi.CuplLang.Parser

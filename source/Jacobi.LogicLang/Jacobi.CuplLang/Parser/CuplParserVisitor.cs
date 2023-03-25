@@ -171,12 +171,19 @@ public interface ICuplParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitSymbol([NotNull] CuplParser.SymbolContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>expressionUnaryPrefix</c>
+	/// Visit a parse tree produced by the <c>expressionBinaryOr</c>
 	/// labeled alternative in <see cref="CuplParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpressionUnaryPrefix([NotNull] CuplParser.ExpressionUnaryPrefixContext context);
+	Result VisitExpressionBinaryOr([NotNull] CuplParser.ExpressionBinaryOrContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionBinaryXor</c>
+	/// labeled alternative in <see cref="CuplParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionBinaryXor([NotNull] CuplParser.ExpressionBinaryXorContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionNumber</c>
 	/// labeled alternative in <see cref="CuplParser.expression"/>.
@@ -192,12 +199,19 @@ public interface ICuplParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExpressionSymbol([NotNull] CuplParser.ExpressionSymbolContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>expressionBinary</c>
+	/// Visit a parse tree produced by the <c>expressionBinaryAnd</c>
 	/// labeled alternative in <see cref="CuplParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpressionBinary([NotNull] CuplParser.ExpressionBinaryContext context);
+	Result VisitExpressionBinaryAnd([NotNull] CuplParser.ExpressionBinaryAndContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionUnaryNot</c>
+	/// labeled alternative in <see cref="CuplParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionUnaryNot([NotNull] CuplParser.ExpressionUnaryNotContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionPrecedence</c>
 	/// labeled alternative in <see cref="CuplParser.expression"/>.
@@ -247,17 +261,5 @@ public interface ICuplParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitExtension([NotNull] CuplParser.ExtensionContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.binOp"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitBinOp([NotNull] CuplParser.BinOpContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CuplParser.uniOp"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitUniOp([NotNull] CuplParser.UniOpContext context);
 }
 } // namespace Jacobi.CuplLang.Parser

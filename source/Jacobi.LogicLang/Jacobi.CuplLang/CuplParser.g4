@@ -28,8 +28,10 @@ symbolRange: BracketOpen Symbol Range Number BracketClose;
 equation: Append? LogicNot? symbol extension? Eq expression SemiColon;
 symbol: Symbol | symbolList | symbolRange;
 expression: 
-    expression binOp expression                 #expressionBinary
-    | uniOp expression                          #expressionUnaryPrefix
+    LogicNot expression                         #expressionUnaryNot
+    | expression LogicAnd expression            #expressionBinaryAnd
+    | expression LogicOr expression             #expressionBinaryOr
+    | expression Dollar expression              #expressionBinaryXor
     | ParenOpen expression ParenClose           #expressionPrecedence
     | Symbol                                    #expressionSymbol
     | number                                    #expressionNumber
@@ -41,5 +43,3 @@ decNumber: PrefixDecimal? Number;
 hexNumber: PrefixHex HexNumber;
 dontCareNumber: PrefixBinary DontCareNumber;
 extension: Dot Extension;
-binOp: (LogicAnd | LogicOr | Dollar /*XOR*/);
-uniOp: LogicNot;

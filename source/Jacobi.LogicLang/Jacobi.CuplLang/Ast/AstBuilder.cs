@@ -289,25 +289,34 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
         return symbols.ToArray();
     }
 
-    public override object VisitExpressionBinary(ExpressionBinaryContext context)
+    public override object VisitExpressionBinaryAnd(ExpressionBinaryAndContext context)
     {
         var expressions = context.expression();
         var left = (AstExpression)Visit(expressions[0]);
         var right = (AstExpression)Visit(expressions[1]);
-        AstOperator op = AstOperator.None;
 
-        var binOp = context.binOp();
-        if (binOp.LogicAnd() is not null)
-            op = AstOperator.And;
-        else if (binOp.LogicOr() is not null)
-            op = AstOperator.Or;
-        else if (binOp.Dollar() is not null)
-            op = AstOperator.Xor;
-
-        return AstExpression.FromOperator(left, op, right);
+        return AstExpression.FromOperator(left, AstOperator.And, right);
     }
 
-    public override object VisitExpressionUnaryPrefix(ExpressionUnaryPrefixContext context)
+    public override object VisitExpressionBinaryOr(ExpressionBinaryOrContext context)
+    {
+        var expressions = context.expression();
+        var left = (AstExpression)Visit(expressions[0]);
+        var right = (AstExpression)Visit(expressions[1]);
+
+        return AstExpression.FromOperator(left, AstOperator.Or, right);
+    }
+
+    public override object VisitExpressionBinaryXor(ExpressionBinaryXorContext context)
+    {
+        var expressions = context.expression();
+        var left = (AstExpression)Visit(expressions[0]);
+        var right = (AstExpression)Visit(expressions[1]);
+
+        return AstExpression.FromOperator(left, AstOperator.Xor, right);
+    }
+
+    public override object VisitExpressionUnaryNot(ExpressionUnaryNotContext context)
     {
         var expression = (AstExpression)Visit(context.expression());
         return AstExpression.FromOperator(expression, AstOperator.Not);
