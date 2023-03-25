@@ -35,7 +35,7 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
             Diagnostics.Add(new Diagnostic(
                 context.Start.Line,
                 context.Start.Column,
-                context.GetText()
+                context.exception.Message
             ));
             // usually pointless to continue
             return false;
@@ -331,7 +331,8 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
     public override object VisitExpressionPrecedence(ExpressionPrecedenceContext context)
     {
         var expression = (AstExpression)Visit(context.expression());
-        expression.Precedence = true;
+        // () on anything else is useless
+        expression.Precedence = expression.Kind is AstExpressionKind.BinOperator;
         return expression;
     }
 }

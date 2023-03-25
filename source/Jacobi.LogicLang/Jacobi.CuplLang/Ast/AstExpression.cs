@@ -1,4 +1,4 @@
-﻿using System.Collections.Specialized;
+﻿using System.Text;
 
 namespace Jacobi.CuplLang.Ast
 {
@@ -20,41 +20,7 @@ namespace Jacobi.CuplLang.Ast
         UniOperator
     }
 
-    internal struct AstBitValue
-    {
-        private readonly BitVector32 _value;
-
-        public AstBitValue(int value)
-            => _value = new BitVector32(value);
-
-        public static AstBitValue FromDontCareNumber(string value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static AstBitValue FromBinary(string value)
-            => new(Convert.ToInt32(value, 2));
-
-        public static AstBitValue FromDecimal(string value)
-            => new(Convert.ToInt32(value, 10));
-
-        public static AstBitValue FromOctal(string value)
-            => new(Convert.ToInt32(value, 8));
-
-        public static AstBitValue FromHex(string value)
-            => new(Convert.ToInt32(value, 16));
-
-        public int Value
-            => _value.Data;
-
-        public bool this[int index]
-            => _value[index];
-
-        public override string ToString()
-            => _value.ToString();
-    }
-
-    internal class AstExpression
+    internal class AstExpression : IEquatable<AstExpression>
     {
         private AstExpression(AstExpressionKind kind)
             => Kind = kind;
@@ -92,5 +58,66 @@ namespace Jacobi.CuplLang.Ast
         public string? Symbol { get; init; }
         // set when Number expr
         public AstBitValue Number { get; init; }
+
+        public override string ToString()
+        {
+            var txt = Kind switch
+            {
+                AstExpressionKind.Symbol => Symbol!,
+                AstExpressionKind.Number => Number.ToString(),
+                AstExpressionKind.UniOperator => UniOperatorToString(),
+                AstExpressionKind.BinOperator => BinOperatorToString(),
+                _ => "<Invalid Expression Kind>"
+            };
+
+            if (Precedence)
+                return $"({txt})";
+            
+            return txt;
+        }
+
+        private string BinOperatorToString()
+            => new StringBuilder()
+                .Append(Left!.ToString())
+                .Append(OperatorToString())
+                .Append(Right!.ToString())
+                .ToString();
+
+        private string UniOperatorToString()
+            => new StringBuilder()
+                .Append(OperatorToString())
+                .Append(Left!.ToString())
+                .ToString();
+
+        private string OperatorToString()
+            => Operator switch
+            {
+                AstOperator.And => "&",
+                AstOperator.Not => "!",
+                AstOperator.Or => "#",
+                AstOperator.Xor => "$",
+                _ => String.Empty
+            };
+
+        public bool Equals(AstExpression? other)
+        {
+            if (other is null) return false;
+
+            if (Kind == other.Kind)
+            {
+                return Kind switch
+                {
+                    AstExpressionKind.Symbol => Symbol!.Equals(other.Symbol),
+                    AstExpressionKind.Number => Number.Equals(other.Number),
+                    AstExpressionKind.BinOperator => Operator == other.Operator &&
+                        Left!.Equals(other.Left) && Right!.Equals(other.Right),
+                    AstExpressionKind.UniOperator => Operator == other.Operator && 
+                        Left!.Equals(other.Left),
+                    _ => false,
+                };
+            }
+
+            return false;
+        }
     }
 }

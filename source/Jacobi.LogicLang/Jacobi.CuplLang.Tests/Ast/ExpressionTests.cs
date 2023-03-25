@@ -67,5 +67,21 @@ namespace Jacobi.CuplLang.Tests.Ast
 
             expression.Number.Value.Should().Be(255);
         }
+
+        [Fact]
+        public void Equals_Same()
+        {
+            const string cupl =
+                "Device G22V10;" +
+                "x = !(A & B) # A # 0;"
+                ;
+
+            var doc = CuplParser.ParseDocument(cupl);
+
+            var equation = doc.Equations[0];
+            var expression = equation.Expression;
+
+            expression.Equals(expression).Should().BeTrue();
+        }
     }
 }

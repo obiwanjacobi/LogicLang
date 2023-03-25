@@ -1,4 +1,4 @@
-namespace Jacobi.CuplLang.Tests;
+namespace Jacobi.CuplLang.Tests.Ast;
 
 public class UnitTests
 {

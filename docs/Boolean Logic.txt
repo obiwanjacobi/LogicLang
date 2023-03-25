@@ -28,7 +28,7 @@ When an input is inverted an even amount of times, the original value is at its 
 !(!A) = A
 
 -Associative
-And an Or are associative. Multiple inputs in any order always result in the same output.
+And an Or are associative. Multiple same inputs in any order always result in the same output.
 A + (B + C) = (A + B) + C
 A * (B * C) = (A * B) * C
 
