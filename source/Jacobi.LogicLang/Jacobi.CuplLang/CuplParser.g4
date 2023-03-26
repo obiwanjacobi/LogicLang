@@ -2,7 +2,7 @@ parser grammar CuplParser;
 options { tokenVocab=CuplLexer; }
 
 file: header pin* equation* EOF;
-header: (assembly | company | date | designer | device | format | location | name | partno | revision)*;
+header: (assembly | company | date | designer | device | format | location | name | partno | revision | rev)*;
 
 assembly: Assembly freeText EndUseSpaces;
 company: Company freeText EndUseSpaces;
@@ -14,6 +14,7 @@ location: Location freeText EndUseSpaces;
 name: Name freeText EndUseSpaces;
 partno: Partno freeText EndUseSpaces;
 revision: Revision freeText EndUseSpaces;
+rev: Rev freeText EndUseSpaces;
 freeText: FreeText+;
 
 pin: pinSingle | pinList | pinRange;
@@ -23,7 +24,7 @@ pinRange: Pin numberRange Eq LogicNot? symbolRange SemiColon;
 numberList: BracketOpen Number (Comma Number)* BracketClose;
 numberRange: BracketOpen Number Range Number BracketClose;
 symbolList: BracketOpen Symbol (Comma Symbol)* BracketClose;
-symbolRange: BracketOpen Symbol Range Number BracketClose;
+symbolRange: BracketOpen Symbol Range (Symbol | Number) BracketClose;
 
 equation: Append? LogicNot? symbol extension? Eq expression SemiColon;
 symbol: Symbol | symbolList | symbolRange;

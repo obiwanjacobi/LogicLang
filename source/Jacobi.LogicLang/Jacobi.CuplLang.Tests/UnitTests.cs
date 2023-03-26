@@ -1,6 +1,7 @@
+using Jacobi.CuplLang.Tests.Ast;
 using Xunit.Abstractions;
 
-namespace Jacobi.CuplLang.Tests.Ast;
+namespace Jacobi.CuplLang.Tests;
 
 public class UnitTests
 {
@@ -17,7 +18,6 @@ public class UnitTests
                     "x = A;"
                     ;
 
-        var doc = CuplParser.ParseDocument(cupl);
-        CuplParser.FailIfDiagnostics(doc, _output);
+        var doc = CuplParser.ParseDocument(cupl, _output);
     }
 }

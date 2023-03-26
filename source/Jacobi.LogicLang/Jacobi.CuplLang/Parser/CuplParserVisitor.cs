@@ -105,6 +105,12 @@ public interface ICuplParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitRevision([NotNull] CuplParser.RevisionContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="CuplParser.rev"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRev([NotNull] CuplParser.RevContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="CuplParser.freeText"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

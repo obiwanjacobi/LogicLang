@@ -1,2 +1,7 @@
+Name      Adder;
+Partno    CA0016;
+Date      08/10/1999;
+Rev       01;
 Device   G22V10;
+Pin [2..3] = [R0..R1];
 x = D & A1 # B3;

@@ -280,10 +280,24 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
 
     public override object VisitSymbolRange(SymbolRangeContext context)
     {
-        var symbol = new AstSymbol(context.Symbol().GetText());
-        var numTxt = context.Number().GetText()!;
+        var symbolsCtx = context.Symbol();
+        var symbol = new AstSymbol(symbolsCtx[0].GetText());
+        
+        var numEnd = 0;
+        var numCtx = context.Number();
+        if (numCtx is not null)
+        {
+            var numTxt = numCtx.GetText()!;
+            numEnd = Int32.Parse(numTxt);
+        }
+        else
+        {
+            var numSymbol = new AstSymbol(symbolsCtx[1].GetText());
+            numEnd = numSymbol.Digits.Value;
+        }
+
         // TODO: does not support reversed ranges (from hi to lo).
-        var count = Int32.Parse(numTxt) - symbol.Digits.Value + 1;
+        var count = numEnd - symbol.Digits.Value + 1;
         var symbolNumbers = Enumerable.Range(symbol.Digits.Value, count)
             .Skip(1).ToArray();
 

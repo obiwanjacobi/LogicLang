@@ -14,8 +14,9 @@ Location: (L O C A T I O N) -> mode(UseSpacesMode);
 Name: (N A M E) -> mode(UseSpacesMode);
 Partno: (P A R T N O) -> mode(UseSpacesMode);
 Revision: (R E V I S I O N) -> mode(UseSpacesMode);
+Rev: (R E V) -> mode(UseSpacesMode);
 
-DeviceName: (G '16' V '8') | (G '22' V '10');
+DeviceName: (G '16' V '8' ALPHA*) | (G '22' V '10' ALPHA*);
 FormatName: J;
 
 // keywords

@@ -59,6 +59,6 @@ internal sealed class DiagnosticErrorListener : IAntlrErrorListener<IToken>
         RecognitionException e)
     {
         _diagnostics.Add(new Diagnostic(line, charPositionInLine,
-            $"Syntax Error: {e.GetType().Name}: {msg} ({line}:{charPositionInLine}).\nToken: {offendingSymbol})"));
+            $"Syntax Error ({e?.GetType().Name}): {msg} ({line}:{charPositionInLine}).\nToken: {offendingSymbol})"));
     }
 }
