@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Jacobi.CuplLang": {
+      "commandName": "Project",
+      "commandLineArgs": "-f antlr.debug.pld"
+    }
+  }
+}

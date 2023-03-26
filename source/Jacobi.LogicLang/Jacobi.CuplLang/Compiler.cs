@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Antlr4.Runtime;
+using Jacobi.CuplLang.Ast;
 using Jacobi.CuplLang.Parser;
 using static Jacobi.CuplLang.Parser.CuplParser;
 
@@ -29,6 +31,19 @@ internal class Compiler
         // TODO: Error handling
         var context = parser.file();
         return context;
+    }
+
+    internal AstDocument BuildAst(FileContext fileCtx)
+        => new AstBuilder().File(fileCtx);
+
+    internal Placement.Placement DoPlacement(AstDocument astDoc)
+    {
+        return null!;
+    }
+
+    internal void GenerateJedec(Placement.Placement placement, string output)
+    {
+        
     }
 }
 

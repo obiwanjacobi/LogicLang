@@ -24,4 +24,7 @@ internal sealed class Diagnostic
 
     public Location Location { get; }
     public string Message { get; }
+
+    public override string ToString()
+        => $"{Message} ({Location})";
 }
