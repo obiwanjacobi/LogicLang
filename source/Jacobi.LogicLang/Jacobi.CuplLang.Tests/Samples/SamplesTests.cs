@@ -13,7 +13,7 @@ public class SamplesTests
     public SamplesTests(ITestOutputHelper output)
     {
         _output = output;
-        _basePath = Environment.CurrentDirectory;
+        _basePath = Path.Combine(Environment.CurrentDirectory, "Samples", "WinCupl");
     }
 
     private AstDocument ParseFile(string filePath)
@@ -38,7 +38,7 @@ public class SamplesTests
     //[InlineData("TTL.PLD")]       => G20V8 device (not G16V8/G22V10)
     public void WinCUPL_Parse(string fileName)
     {
-        var doc = ParseFile(Path.Combine(_basePath, "Samples", "WinCupl", fileName));
+        var doc = ParseFile(Path.Combine(_basePath, fileName));
         doc.Diagnostics.Should().HaveCount(0);
     }
 }
