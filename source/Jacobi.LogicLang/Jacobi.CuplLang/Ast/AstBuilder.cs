@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using Jacobi.CuplLang.Parser;
 using static Jacobi.CuplLang.Parser.CuplParser;
@@ -248,12 +249,20 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
         var expression = (AstExpression)Visit(context.expression());
         var symbols = (AstSymbol[])VisitSymbol(context.symbol());
         var append = context.Append() is not null;
+        
+        var extension = SymbolExtension.None;
+        var extensionCtx = context.extension();
+        if (extensionCtx is not null)
+        {
+            extension = (SymbolExtension)Visit(extensionCtx);
+        }
 
         return symbols.Select(symbol => new AstEquation
         {
             Append = append,
             Symbol = symbol.Value,
-            Expression = expression
+            Expression = expression,
+            Extension = extension
         });
     }
 
@@ -360,5 +369,16 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
         // () on anything else is useless
         expression.Precedence = expression.Kind is AstExpressionKind.BinOperator;
         return expression;
+    }
+
+    public override object VisitExtension(ExtensionContext context)
+    {
+        return context.GetText().ToUpperInvariant() switch
+        {
+            ".D" => SymbolExtension.Data,
+            ".AR" => SymbolExtension.AsyncReset,
+            ".SP" => SymbolExtension.SyncPreset,
+            _ => SymbolExtension.None
+        };
     }
 }

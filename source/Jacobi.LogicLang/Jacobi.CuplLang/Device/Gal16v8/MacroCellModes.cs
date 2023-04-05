@@ -1,24 +1,5 @@
 ﻿namespace Jacobi.CuplLang.Device.Gal16V8;
 
-internal abstract class G16V8Mode
-{
-    private readonly G16V18MacroCell _macroCell;
-
-    protected G16V8Mode(G16V18MacroCell macroCell)
-    {
-        _macroCell = macroCell;
-    }
-
-    protected G16V18MacroCell MacroCell => _macroCell;
-
-    public abstract MacroCellMode Mode { get; }
-    public abstract int ProductTermCount { get; }
-
-    public abstract MacroCellFunction Function { get; }
-    public abstract bool TrySetFunction(MacroCellFunction function);
-
-    public abstract MacroCellOutputEnable OutputEnable { get; }
-}
 
 // product terms = 8
 // no OE
@@ -27,19 +8,22 @@ internal abstract class G16V8Mode
 // - output
 //   feedback
 // - input
-internal sealed class G16V8SimpleMode : G16V8Mode
+internal sealed class G16V8SimpleMode : MacroCellMode
 {
     public G16V8SimpleMode(G16V18MacroCell macroCell)
         : base(macroCell)
     {}
 
     public override int ProductTermCount => 8;
-    public override MacroCellMode Mode => MacroCellMode.Simple;
+    public override MacroCellModeKind Mode => MacroCellModeKind.Simple;
 
     private MacroCellFunction _function;
     public override MacroCellFunction Function => _function;
     public override bool TrySetFunction(MacroCellFunction function)
     {
+        if (_function == function)
+            return true;
+
         var num = MacroCell.Pin.Number;
 
         switch (function)
@@ -76,7 +60,7 @@ internal sealed class G16V8SimpleMode : G16V8Mode
 //   OE is from external pin
 //   product terms = 8
 //   feedback
-internal sealed class G16V8RegisteredMode : G16V8Mode
+internal sealed class G16V8RegisteredMode : MacroCellMode
 {
     public G16V8RegisteredMode(G16V18MacroCell macroCell)
         : base(macroCell)
@@ -84,7 +68,7 @@ internal sealed class G16V8RegisteredMode : G16V8Mode
 
     public override int ProductTermCount 
         => _function == MacroCellFunction.FlipFlop ? 8 : 7;
-    public override MacroCellMode Mode => MacroCellMode.Registered;
+    public override MacroCellModeKind Mode => MacroCellModeKind.Registered;
 
     private MacroCellFunction _function;
     public override MacroCellFunction Function => _function;
@@ -117,14 +101,14 @@ internal sealed class G16V8RegisteredMode : G16V8Mode
 // outputs
 // Pin 13-18 have input/feedback
 // Pin 12, 19 do not have feedback
-internal sealed class G16V8ComplexMode : G16V8Mode
+internal sealed class G16V8ComplexMode : MacroCellMode
 {
     public G16V8ComplexMode(G16V18MacroCell macroCell)
         : base(macroCell)
     { }
 
     public override int ProductTermCount => 7;
-    public override MacroCellMode Mode => MacroCellMode.Complex;
+    public override MacroCellModeKind Mode => MacroCellModeKind.Complex;
 
     private MacroCellFunction _function;
     public override MacroCellFunction Function => _function;

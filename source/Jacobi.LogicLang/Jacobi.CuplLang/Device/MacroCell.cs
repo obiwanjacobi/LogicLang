@@ -1,6 +1,6 @@
 ﻿namespace Jacobi.CuplLang.Device;
 
-internal enum MacroCellMode
+internal enum MacroCellModeKind
 {
     /// <summary>Not initialized.</summary>
     None,
@@ -41,14 +41,17 @@ internal abstract class MacroCell
     protected MacroCell(Pin pin)
     {
         Pin = pin;
+        Mode = new NullMode(this);
     }
+
+    protected MacroCellMode Mode { get; set; }
 
     public Pin Pin { get; }
     public virtual int ProductTermCount { get; }
     public virtual bool InvertOutput { get; set; }
 
-    public MacroCellMode Mode { get; protected set; }
-    public virtual bool TrySetMode(MacroCellMode mode)
+    public MacroCellModeKind ModeKind { get; protected set; }
+    public virtual bool TrySetMode(MacroCellModeKind mode)
     {
         return false;
     }
@@ -60,4 +63,38 @@ internal abstract class MacroCell
     }
 
     public virtual MacroCellOutputEnable OutputEnable { get; }
+
+    private sealed class NullMode : MacroCellMode
+    {
+        internal NullMode(MacroCell macroCell)
+            : base(macroCell)
+        { }
+
+        public override MacroCellModeKind Mode => MacroCellModeKind.None;
+        public override int ProductTermCount => 0;
+        public override MacroCellFunction Function => MacroCellFunction.None;
+
+        public override bool TrySetFunction(MacroCellFunction function)
+            => false;
+
+        public override MacroCellOutputEnable OutputEnable => MacroCellOutputEnable.None;
+    }
+}
+
+internal abstract class MacroCellMode
+{
+    protected MacroCellMode(MacroCell macroCell)
+    {
+        MacroCell = macroCell;
+    }
+
+    protected MacroCell MacroCell { get; }
+
+    public abstract MacroCellModeKind Mode { get; }
+    public abstract int ProductTermCount { get; }
+
+    public abstract MacroCellFunction Function { get; }
+    public abstract bool TrySetFunction(MacroCellFunction function);
+
+    public abstract MacroCellOutputEnable OutputEnable { get; }
 }

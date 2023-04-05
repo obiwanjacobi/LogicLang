@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Jacobi.CuplLang.Placement;
+﻿namespace Jacobi.CuplLang.Placement;
 
 internal class AndOrPlacement : Placement
 {
     // inputs => and equation
     // output (MacroCell) => product terms or-ed
     //  flipflop / OE / CLK / XOR / feedback/input
-
+    public AndOrPlacement(Device.Device device)
+        : base(device)
+    { }
 }
 
 

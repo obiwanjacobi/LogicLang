@@ -4,8 +4,7 @@ namespace Jacobi.CuplLang.Device.Gal16V8;
 
 internal class G16V8 : Device
 {
-    // immutable, so static
-    private static readonly Pin[] AllPinInfos = new[]
+    private readonly List<Pin> AllPinInfos = new()
     {
         new Pin(1, PinDirection.Input, PinFunction.GPIO | PinFunction.Clock),
         new Pin(2, PinDirection.Input, PinFunction.GPIO),
@@ -30,19 +29,24 @@ internal class G16V8 : Device
         new Pin(20, PinDirection.None, PinFunction.Power)
     };
 
-    // mutable, so not static
-    private readonly G16V18MacroCell[] AllMacroCells = new[]
-    {
-        new G16V18MacroCell(AllPinInfos[11]),
-        new G16V18MacroCell(AllPinInfos[12]),
-        new G16V18MacroCell(AllPinInfos[13]),
-        new G16V18MacroCell(AllPinInfos[14]),
-        new G16V18MacroCell(AllPinInfos[15]),
-        new G16V18MacroCell(AllPinInfos[16]),
-        new G16V18MacroCell(AllPinInfos[17]),
-        new G16V18MacroCell(AllPinInfos[18])
-    };
+    private readonly List<G16V18MacroCell> AllMacroCells = new();
 
-    public override IReadOnlyList<Pin> PinInfos => AllPinInfos;
+    public G16V8()
+    {
+        var cells = new []{
+            new G16V18MacroCell(AllPinInfos[11]),
+            new G16V18MacroCell(AllPinInfos[12]),
+            new G16V18MacroCell(AllPinInfos[13]),
+            new G16V18MacroCell(AllPinInfos[14]),
+            new G16V18MacroCell(AllPinInfos[15]),
+            new G16V18MacroCell(AllPinInfos[16]),
+            new G16V18MacroCell(AllPinInfos[17]),
+            new G16V18MacroCell(AllPinInfos[18])
+        };
+
+        AllMacroCells.AddRange(cells);
+    }
+
+    public override IReadOnlyList<Pin> Pins => AllPinInfos;
     public override IReadOnlyList<MacroCell> MacroCells => AllMacroCells;
 }

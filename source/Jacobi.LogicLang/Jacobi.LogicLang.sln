@@ -5,7 +5,12 @@ VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jacobi.CuplLang", "Jacobi.CuplLang\Jacobi.CuplLang.csproj", "{579DC191-E7E7-44E4-80C5-898278111EAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jacobi.CuplLang.Tests", "Jacobi.CuplLang.Tests\Jacobi.CuplLang.Tests.csproj", "{8AB064D5-AAAE-4392-9704-B4C14CB5130D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jacobi.CuplLang.Tests", "Jacobi.CuplLang.Tests\Jacobi.CuplLang.Tests.csproj", "{8AB064D5-AAAE-4392-9704-B4C14CB5130D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0393B545-3FBC-46B2-B246-A0B08FCB70ED}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

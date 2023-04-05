@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Jacobi.CuplLang.Ast;
+using Jacobi.CuplLang.Device.Gal16V8;
 
 namespace Jacobi.CuplLang.Device;
 
@@ -29,12 +33,32 @@ internal abstract class Device
     protected Device()
     { }
 
+    public const string G16V8 = "G16V8";
+    public const string G22V10 = "G22V10";
+
+    public static Device Create(string device)
+    {
+        var name = device.ToUpper();
+
+        if (name.StartsWith(G16V8))
+        {
+            return new G16V8();
+        }
+
+        //if (name.StartsWith(G22V10))
+        //{
+        //    return new G22V10();
+        //}
+
+        throw new ArgumentException($"The device '{device}' is not supported.", nameof(device));
+    }
+
     public DeviceMode Mode { get; protected set; }
     public virtual bool TrySetDeviceMode(DeviceMode mode)
     {
         return false;
     }
 
-    public abstract IReadOnlyList<Pin> PinInfos { get; }
+    public abstract IReadOnlyList<Pin> Pins { get; }
     public abstract IReadOnlyList<MacroCell> MacroCells { get; }
 }
