@@ -4,7 +4,7 @@ namespace Jacobi.CuplLang.Device.Gal16V8;
 
 internal class G16V8 : Device
 {
-    private readonly List<Pin> AllPinInfos = new()
+    private readonly List<Pin> _pins = new()
     {
         new Pin(1, PinDirection.Input, PinFunction.GPIO | PinFunction.Clock),
         new Pin(2, PinDirection.Input, PinFunction.GPIO),
@@ -29,24 +29,35 @@ internal class G16V8 : Device
         new Pin(20, PinDirection.None, PinFunction.Power)
     };
 
-    private readonly List<G16V18MacroCell> AllMacroCells = new();
+    private readonly List<G16V18MacroCell> _macroCells;
 
     public G16V8()
     {
-        var cells = new []{
-            new G16V18MacroCell(AllPinInfos[11]),
-            new G16V18MacroCell(AllPinInfos[12]),
-            new G16V18MacroCell(AllPinInfos[13]),
-            new G16V18MacroCell(AllPinInfos[14]),
-            new G16V18MacroCell(AllPinInfos[15]),
-            new G16V18MacroCell(AllPinInfos[16]),
-            new G16V18MacroCell(AllPinInfos[17]),
-            new G16V18MacroCell(AllPinInfos[18])
+        _macroCells = new List<G16V18MacroCell>() {
+            new G16V18MacroCell(_pins[11]),
+            new G16V18MacroCell(_pins[12]),
+            new G16V18MacroCell(_pins[13]),
+            new G16V18MacroCell(_pins[14]),
+            new G16V18MacroCell(_pins[15]),
+            new G16V18MacroCell(_pins[16]),
+            new G16V18MacroCell(_pins[17]),
+            new G16V18MacroCell(_pins[18])
         };
-
-        AllMacroCells.AddRange(cells);
     }
 
-    public override IReadOnlyList<Pin> Pins => AllPinInfos;
-    public override IReadOnlyList<MacroCell> MacroCells => AllMacroCells;
+    public override IReadOnlyList<Pin> Pins => _pins;
+    public override IReadOnlyList<MacroCell> MacroCells => _macroCells;
+
+    public override bool TrySetDeviceMode(DeviceMode mode)
+    {
+        var macroCellMode = ToMacroCellMode(mode);
+        foreach (var macroCell in _macroCells)
+        {
+            if (!macroCell.TrySetMode(macroCellMode))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }

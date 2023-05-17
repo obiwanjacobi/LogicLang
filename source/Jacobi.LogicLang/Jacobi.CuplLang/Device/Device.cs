@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Jacobi.CuplLang.Ast;
 using Jacobi.CuplLang.Device.Gal16V8;
 
 namespace Jacobi.CuplLang.Device;
@@ -61,4 +59,13 @@ internal abstract class Device
 
     public abstract IReadOnlyList<Pin> Pins { get; }
     public abstract IReadOnlyList<MacroCell> MacroCells { get; }
+
+    protected static MacroCellModeKind ToMacroCellMode(DeviceMode mode)
+        => mode switch
+        {
+            DeviceMode.Simple => MacroCellModeKind.Simple,
+            DeviceMode.Registered => MacroCellModeKind.Registered,
+            DeviceMode.Complex => MacroCellModeKind.Complex,
+            _ => MacroCellModeKind.None
+        };
 }

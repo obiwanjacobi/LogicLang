@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Jacobi.CuplLang.Ast;
 
+[DebuggerDisplay("{Symbol}({PinNumber})")]
 internal class AstPin
 {
     public int PinNumber { get; internal set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Jacobi.CuplLang.Device;
 
@@ -36,6 +37,7 @@ internal enum PinFunction
     Foldback = 0x1000,
 }
 
+[DebuggerDisplay("{Number} {Direction}-{Function}")]
 internal class Pin
 {
     private readonly int _capabilities;

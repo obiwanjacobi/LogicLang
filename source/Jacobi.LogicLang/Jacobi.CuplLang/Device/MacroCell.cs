@@ -1,4 +1,6 @@
-﻿namespace Jacobi.CuplLang.Device;
+﻿using System.Diagnostics;
+
+namespace Jacobi.CuplLang.Device;
 
 internal enum MacroCellModeKind
 {
@@ -36,6 +38,7 @@ internal enum MacroCellOutputEnable
     Device
 }
 
+[DebuggerDisplay("{Pin} - {ModeKind}/{ProductTermCount}")]
 internal abstract class MacroCell
 {
     protected MacroCell(Pin pin)

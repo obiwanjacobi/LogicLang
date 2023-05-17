@@ -71,8 +71,6 @@ For each pin defined in the CUPL file, an AstPin instance is created. List (`pin
 For each logic equation in the CUPL file, a `AstEquation` instance is created.
 An equation contains the symbol name and the expression.
 
-TODO: combine `Append` equations on the same symbol.
-
 ### `AstExpression`
 
 A hierarchy of `AstExpression` instances represent a single logic equation in the CUPL file.
@@ -107,9 +105,13 @@ This is the meat of the matter.
 Usage of extensions (`.d`, `.ar`) denote that the output module is in registered mode.
 Do not assume all devices allow individual selection of output module modes. Some settings are device global.
 
+Detect presence of a Clock input (`.clk`). Some modes make use of the clock input (pin 1) implicitly (for all FlipFlops). Not all modes support defining a custom clock equation.
+
 input -> AND-array -> ORed to output + optional FF / invertor
 
 TODO
+
+---
 
 ## Output `.jed` file
 

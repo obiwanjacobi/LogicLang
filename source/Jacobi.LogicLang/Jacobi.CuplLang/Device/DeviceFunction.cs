@@ -16,6 +16,8 @@ internal class DeviceFunction
 
     public bool AssignPinFunctions(IEnumerable<AstPin> astPins, IEnumerable<AstEquation> equations)
     {
+        _diagnostics.Clear();
+
         // all assigned symbols in equations
         var potentialOutputSymbols = equations
             .Select(e => e.Symbol)
@@ -35,6 +37,8 @@ internal class DeviceFunction
 
         foreach (var pin in Device.Pins)
         {
+            if (pin.Function is PinFunction.Power) continue;
+
             var function = PinFunction.None;
             var direction = PinDirection.None;
 
@@ -42,6 +46,7 @@ internal class DeviceFunction
             {
                 direction |= PinDirection.Output;
             }
+            // TODO: Input/Output pins will not work
             if (inputPins.ContainsKey(pin.Number))
             {
                 direction |= PinDirection.Input;
@@ -49,6 +54,16 @@ internal class DeviceFunction
             if (foldbackPins.ContainsKey(pin.Number))
             {
                 function |= PinFunction.Foldback;
+            }
+
+            // defaults for unused pins
+            if (direction is PinDirection.None)
+            {
+                direction = PinDirection.Input;
+            }
+            if (function is PinFunction.None)
+            {
+                function = PinFunction.GPIO;
             }
 
             if (!pin.TrySetFunction(direction, function))
