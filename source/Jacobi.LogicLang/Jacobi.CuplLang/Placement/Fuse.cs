@@ -1,8 +1,7 @@
-﻿namespace Jacobi.CuplLang.Placement
+﻿namespace Jacobi.CuplLang.Placement;
+
+internal readonly struct Fuse
 {
-    internal readonly struct Fuse
-    {
-        public int Number { get; }
-        public bool Value { get; }
-    }
+    public int Number { get; }
+    public bool Value { get; }
 }
