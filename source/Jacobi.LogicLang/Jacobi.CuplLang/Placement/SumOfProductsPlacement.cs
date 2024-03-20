@@ -2,12 +2,12 @@
 
 namespace Jacobi.CuplLang.Placement;
 
-internal class SumOfProductPlacement : Placement
+internal class SumOfProductsPlacement : Placement
 {
     // inputs => and equation
     // output (MacroCell) => product terms or-ed
     //  flipflop / OE / CLK / XOR / feedback/input
-    public SumOfProductPlacement(Device.Device device)
+    public SumOfProductsPlacement(Device.Device device)
         : base(device)
     { }
 

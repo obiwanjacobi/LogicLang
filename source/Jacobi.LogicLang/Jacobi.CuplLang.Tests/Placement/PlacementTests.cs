@@ -40,7 +40,7 @@ public class PlacementTests
         WriteDiagnostics(functions.Diagnostics);
         success.Should().BeTrue();
 
-        var placement = new SumOfProductPlacement(device);
+        var placement = new SumOfProductsPlacement(device);
         placement.Inputs.Should().HaveCount(17);
         placement.Outputs.Should().HaveCount(1);
     }
