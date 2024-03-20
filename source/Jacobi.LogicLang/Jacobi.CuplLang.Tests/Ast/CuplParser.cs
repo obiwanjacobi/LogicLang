@@ -18,10 +18,13 @@ namespace Jacobi.CuplLang.Tests.Ast
         public static AstDocument ParseDocument(string cupl, ITestOutputHelper? output = null)
         {
             var ctx = ParseFile(cupl, output);
-            var builder = new AstBuilder();
-            var doc = builder.File(ctx);
+
+            var compiler = new Compiler();
+            var doc = compiler.BuildAst(ctx);
+
             if (output is not null)
                 FailIfDiagnostics(doc.Diagnostics, output);
+            
             return doc;
         }
 

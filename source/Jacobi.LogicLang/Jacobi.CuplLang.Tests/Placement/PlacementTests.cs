@@ -59,9 +59,7 @@ public class PlacementTests
             ;
 
         var doc = CuplParser.ParseDocument(cupl, _output);
-        var appender = new AstEquationAppender();
-        appender.AppendAll(doc.Equations);
-        var truthTable = new TruthTable(appender.Equations);
+        var truthTable = new TruthTable(doc.Equations);
         _output.WriteLine(truthTable.ToString());
     }
 }

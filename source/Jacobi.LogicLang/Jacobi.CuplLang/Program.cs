@@ -14,7 +14,7 @@ public static class Program
     {
         _output.WriteLine("-----------------------------");
         _output.WriteLine("CUPL Language Compiler v1.0.0");
-        _output.WriteLine("  Jacobi Software (c) 2023");
+        _output.WriteLine("  Jacobi Software (c) 2024");
         _output.WriteLine("-----------------------------");
 
         var rootCmd = CreateCommandLineCommands();

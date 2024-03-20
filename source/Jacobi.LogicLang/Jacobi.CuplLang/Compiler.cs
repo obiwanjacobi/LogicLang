@@ -34,16 +34,20 @@ internal class Compiler
     }
 
     internal AstDocument BuildAst(FileContext fileCtx)
-        => new AstBuilder().File(fileCtx);
+    {
+        var doc = new AstBuilder().File(fileCtx);
+        var appender = new AstEquationAppender();
+        appender.AppendAll(doc.Equations);
+        return doc;
+    }
 
     internal Placement.Placement DoPlacement(AstDocument astDoc)
     {
         return null!;
     }
 
-    internal void GenerateJedec(Placement.Placement placement, string output)
+    internal void GenerateJedec(Placement.Placement placement, string outputFilePath)
     {
-        
     }
 }
 

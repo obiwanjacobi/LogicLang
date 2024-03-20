@@ -49,22 +49,36 @@ internal sealed class TruthTable
     public override string ToString()
     {
         var builder = new StringBuilder();
+        var widths = new List<int>();
 
+        // header
         foreach (var input in _evaluator.Inputs)
         {
             builder.Append("| ")
                 .Append(input).
-                Append(" ");
+                Append(' ');
+            widths.Add(input.Length + 2);
         }
-        builder.Append("|");
+        builder.Append('|');
+        widths.Add(0);
         foreach (var output in _evaluator.Outputs)
         {
             builder.Append("| ")
                 .Append(output)
-                .Append(" ");
+                .Append(' ');
+            widths.Add(output.Length + 2);
         }
         builder.AppendLine("|");
 
+        // separator
+        foreach (var w in widths)
+        {
+            builder.Append('|')
+                .Append(new string('-', w));
+        }
+        builder.AppendLine("|");
+
+        // values        
         foreach (var item in _items)
         {
             builder.AppendLine(item.ToString());
