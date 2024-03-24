@@ -32,7 +32,7 @@ internal class DeviceFunction
             .ToDictionary(p => p.PinNumber, p => p);
         // output pins that are used as inputs in equations.
         var foldbackPins = outputPins
-            .Where(kvp => equations.Any(e => e.Expression.Find(kvp.Value.Symbol)))
+            .Where(kvp => equations.Any(e => e.Expression.Contains(kvp.Value.Symbol)))
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
         foreach (var pin in Device.Pins)

@@ -1,10 +1,10 @@
 ﻿namespace Jacobi.CuplLang.Ast;
 
-internal sealed class AstExpressionInvertSymbol : AstExpressionRewriter
+internal sealed class AstExpressionSymbolInvert : AstExpressionRewriter
 {
     private readonly string _symbol;
 
-    public AstExpressionInvertSymbol(string symbol)
+    public AstExpressionSymbolInvert(string symbol)
         => _symbol = symbol;
 
     protected override AstExpression RewriteUnaryOperator(AstExpression expression)

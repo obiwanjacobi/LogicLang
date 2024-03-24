@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.CommandLine;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using Jacobi.CuplLang.Parser;
 using static Jacobi.CuplLang.Parser.CuplParser;
 
 namespace Jacobi.CuplLang.Ast;
 
-internal sealed class AstBuilder : CuplParserBaseVisitor<object>
+internal sealed class AstBuilder : CuplParserBaseVisitor<object?>
 {
-    public List<Diagnostic> Diagnostics = new();
+    private readonly List<AstPin> _pins = new();
+
+    public List<Diagnostic> Diagnostics = [];
 
 #if DEBUG
-    protected override object AggregateResult(object aggregate, object nextResult)
+    protected override object? AggregateResult(object? aggregate, object? nextResult)
     {
         if (nextResult is null)
             return aggregate;
@@ -47,7 +50,7 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
         return true;
     }
 
-    public override object VisitErrorNode(IErrorNode node)
+    public override object? VisitErrorNode(IErrorNode node)
     {
         Diagnostics.Add(new Diagnostic(
             node.Symbol.Line,
@@ -61,8 +64,8 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
     public AstDocument File(FileContext context)
     {
         var header = new AstHeader();
-        var pins = new List<AstPin>();
         var equations = new List<AstEquation>();
+        _pins.Clear();
 
         foreach (var child in context.children)
         {
@@ -72,7 +75,7 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
                     header = (AstHeader)VisitHeader(ctx);
                     break;
                 case PinContext ctx:
-                    pins.AddRange((IEnumerable<AstPin>)VisitPin(ctx));
+                    AddPins((IEnumerable<AstPin>)VisitPin(ctx)!);
                     break;
                 case EquationContext ctx:
                     equations.AddRange((IEnumerable<AstEquation>)VisitEquation(ctx));
@@ -84,9 +87,32 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
         {
             Diagnostics = Diagnostics,
             Header = header,
-            Pins = pins,
+            Pins = _pins,
             Equations = equations
         };
+    }
+
+    private void AddPins(IEnumerable<AstPin> pins)
+    {
+        foreach (var pin in pins)
+        {
+            if (_pins.Exists(p => p.PinNumber == pin.PinNumber))
+            {
+                Diagnostics.Add(new Diagnostic (
+                    $"Duplicate pin Number definition: {pin.PinNumber} ({pin.Symbol})."
+                ));
+                continue;
+            }
+            if (_pins.Exists(p => p.Symbol == pin.Symbol))
+            {
+                Diagnostics.Add(new Diagnostic(
+                    $"Duplicate pin Symbol definition: {pin.Symbol} ({pin.PinNumber})."
+                ));
+                continue;
+            }
+
+            _pins.Add(pin);
+        }
     }
 
     // header
@@ -170,6 +196,12 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
 
     // Pins
 
+    private bool TryFindPin(string symbol, [NotNullWhen(true)] out AstPin? pin)
+    {
+        pin = _pins.SingleOrDefault(p => p.Symbol == symbol);
+        return pin is not null;
+    }
+
     public override object VisitPinSingle(PinSingleContext context)
     {
         var inverted = context.LogicNot() is not null;
@@ -194,20 +226,26 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
         var numList = context.numberList()?.Number()!;
         var symbolList = context.symbolList()?.Symbol()!;
 
-        // TODO: number of items in numList and symbolList must match
-        for (int i = 0; i < numList.Length; i++)
+        if (numList.Length != symbolList.Length)
         {
-            var numTxt = numList[i].GetText()!;
-            var symbol = symbolList[i].GetText()!;
-
-            pins.Add(new AstPin
-            {
-                PinNumber = Int32.Parse(numTxt),
-                Symbol = symbol,
-                Inverted = inverted
-            });
+            Diagnostics.Add(new Diagnostic(context.Start.Line, context.Start.Column,
+                $"Number of Pin name Symbols ({symbolList.Length}) and the number of Pin numbers ({numList.Length}) mismatch."));
         }
+        else
+        {
+            for (int i = 0; i < numList.Length; i++)
+            {
+                var numTxt = numList[i].GetText()!;
+                var symbol = symbolList[i].GetText()!;
 
+                pins.Add(new AstPin
+                {
+                    PinNumber = Int32.Parse(numTxt),
+                    Symbol = symbol,
+                    Inverted = inverted
+                });
+            }
+        }
         return pins;
     }
 
@@ -224,7 +262,7 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
 
         if (pinNumbers.Length != symbols.Length)
         {
-            Diagnostics.Add(new Diagnostic(context.Start.Line, context.Start.Column, 
+            Diagnostics.Add(new Diagnostic(context.Start.Line, context.Start.Column,
                 $"Number of Pin name Symbols ({symbols.Length}) and the number of Pin numbers ({pinNumbers.Length}) mismatch."));
         }
         else
@@ -246,28 +284,41 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
 
     public override object VisitEquation(EquationContext context)
     {
-        var expression = (AstExpression)Visit(context.expression());
-        var symbols = (AstSymbol[])VisitSymbol(context.symbol());
+        var expression = (AstExpression)Visit(context.expression())!;
+        var symbols = (AstSymbol[])VisitSymbol(context.symbol())!;
         var append = context.Append() is not null;
         
         var extension = SymbolExtension.None;
         var extensionCtx = context.extension();
         if (extensionCtx is not null)
         {
-            extension = (SymbolExtension)Visit(extensionCtx);
+            extension = (SymbolExtension)VisitExtension(extensionCtx);
         }
 
-        return symbols.Select(symbol => new AstEquation
+        var equations = new List<AstEquation>();
+        foreach (var symbol in symbols.Select(s => s.Value))
         {
-            Append = append,
-            Symbol = symbol.Value,
-            Expression = expression,
-            Extension = extension
-        });
+            TryFindPin(symbol, out var pin);
+            if (pin is null && extension != SymbolExtension.None)
+            {
+                Diagnostics.Add(new Diagnostic(context.Start.Line, context.Start.Column,
+                    $"Invalid use of extension '{extensionCtx!.GetText()}'. '{symbol}' is not an output pin."));
+            }
+
+            equations.Add(new AstEquation
+            {
+                Append = append,
+                Symbol = symbol,
+                Pin = pin,
+                Expression = expression,
+                Extension = extension
+            });
+        }
+        return equations;
     }
 
     // returns: AstSymbol[]
-    public override object VisitSymbol(SymbolContext context)
+    public override object? VisitSymbol(SymbolContext context)
     {
         var symbol = context.Symbol();
         if (symbol is not null)
@@ -291,7 +342,7 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
     {
         var symbolsCtx = context.Symbol();
         var symbol = new AstSymbol(symbolsCtx[0].GetText());
-        
+
         var numEnd = 0;
         var numCtx = context.Number();
         if (numCtx is not null)
@@ -318,8 +369,8 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
     public override object VisitExpressionBinaryAnd(ExpressionBinaryAndContext context)
     {
         var expressions = context.expression();
-        var left = (AstExpression)Visit(expressions[0]);
-        var right = (AstExpression)Visit(expressions[1]);
+        var left = (AstExpression)Visit(expressions[0])!;
+        var right = (AstExpression)Visit(expressions[1])!;
 
         return AstExpression.FromOperator(left, AstOperator.And, right);
     }
@@ -327,8 +378,8 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
     public override object VisitExpressionBinaryOr(ExpressionBinaryOrContext context)
     {
         var expressions = context.expression();
-        var left = (AstExpression)Visit(expressions[0]);
-        var right = (AstExpression)Visit(expressions[1]);
+        var left = (AstExpression)Visit(expressions[0])!;
+        var right = (AstExpression)Visit(expressions[1])!;
 
         return AstExpression.FromOperator(left, AstOperator.Or, right);
     }
@@ -336,15 +387,15 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
     public override object VisitExpressionBinaryXor(ExpressionBinaryXorContext context)
     {
         var expressions = context.expression();
-        var left = (AstExpression)Visit(expressions[0]);
-        var right = (AstExpression)Visit(expressions[1]);
+        var left = (AstExpression)Visit(expressions[0])!;
+        var right = (AstExpression)Visit(expressions[1])!;
 
         return AstExpression.FromOperator(left, AstOperator.Xor, right);
     }
 
     public override object VisitExpressionUnaryNot(ExpressionUnaryNotContext context)
     {
-        var expression = (AstExpression)Visit(context.expression());
+        var expression = (AstExpression)Visit(context.expression())!;
         return AstExpression.FromOperator(expression, AstOperator.Not);
     }
 
@@ -365,7 +416,7 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
 
     public override object VisitExpressionPrecedence(ExpressionPrecedenceContext context)
     {
-        var expression = (AstExpression)Visit(context.expression());
+        var expression = (AstExpression)Visit(context.expression())!;
         // () on anything else is useless
         expression.Precedence = expression.Kind is AstExpressionKind.BinOperator;
         return expression;
@@ -378,7 +429,9 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object>
             ".D" => SymbolExtension.Data,
             ".AR" => SymbolExtension.AsyncReset,
             ".SP" => SymbolExtension.SyncPreset,
-            _ => SymbolExtension.None
+            ".OE" => SymbolExtension.OutputEnable,
+            "" => SymbolExtension.None,
+            _ => throw new Exception($"Invalid extension {context.GetText()}.")
         };
     }
 }

@@ -1,10 +1,10 @@
 ﻿namespace Jacobi.CuplLang.Ast;
 
-internal sealed class AstExpressionFindSymbol : AstExpressionVisitor<bool>
+internal sealed class AstExpressionSymbolExists : AstExpressionVisitor<bool>
 {
     private readonly string _symbol;
 
-    public AstExpressionFindSymbol(string symbolToFind)
+    public AstExpressionSymbolExists(string symbolToFind)
         => _symbol = symbolToFind;
 
     protected override bool VisitBinaryOperator(AstExpression expression)
@@ -12,10 +12,4 @@ internal sealed class AstExpressionFindSymbol : AstExpressionVisitor<bool>
 
     protected override bool VisitSymbol(AstExpression expression)
         => expression.Symbol == _symbol;
-}
-
-internal static class FindSymbolExtension
-{
-    public static bool Find(this AstExpression expression, string symbol)
-        => new AstExpressionFindSymbol(symbol).Visit(expression);
 }

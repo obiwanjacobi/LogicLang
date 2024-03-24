@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Antlr4.Runtime;
 using Jacobi.CuplLang.Ast;
 using Jacobi.CuplLang.Parser;
@@ -38,6 +39,8 @@ internal class Compiler
         var doc = new AstBuilder().File(fileCtx);
         var appender = new AstEquationAppender();
         appender.AppendAll(doc.Equations);
+        doc.Equations = [..appender.Equations];
+
         return doc;
     }
 
