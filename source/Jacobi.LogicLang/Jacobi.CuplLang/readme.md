@@ -122,4 +122,5 @@ TODO
 ---
 
 - [ ] Syntax: Pin declarations can combine different list and range notations.
+- [ ] Precedence `()` on expressions.
 - [ ] 

@@ -5,13 +5,13 @@ namespace Jacobi.CuplLang.Ast;
 internal enum SymbolExtension
 {
     None,
+    OutputEnable,
     Data,
     AsyncReset,
     SyncPreset,
-    OutputEnable,
 }
 
-internal class AstEquation
+internal sealed class AstEquation
 {
     public bool Append { get; init; }
     public string Symbol { get; init; } = String.Empty;

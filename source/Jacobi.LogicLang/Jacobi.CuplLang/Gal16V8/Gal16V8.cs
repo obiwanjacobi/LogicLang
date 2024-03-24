@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Jacobi.CuplLang.Ast;
-using Jacobi.CuplLang.Device;
 using FuseNumber = System.Int32;
 
 namespace Jacobi.CuplLang.Gal16V8;
@@ -43,6 +42,8 @@ internal sealed class Gal16V8
         if (!outputPins.Values.All(p => eqPins.Contains(p)))
             throw new Exception("Mismatch between equation pins and output pins.");
 
+        // TODO: determine the mode for each MacroCell.
+
         var placement = new PlacementBuilder(_deviceMode);
 
         foreach (var equation in equations)
@@ -57,7 +58,7 @@ internal sealed class Gal16V8
                 var pinRefs = ToPinReferences(pins, expression);
                 productTerm = placement.Add(equation.Pin!, pinRefs, productTerm);
             }
-            
+
             placement.DisableProductTerms(equation.Pin!, productTerm);
         }
         return placement.Build();
@@ -108,15 +109,20 @@ internal sealed class Gal16V8
         // Registered: equations that use .d extension
         if (equations.Any(e => e.Extension == SymbolExtension.Data))
             return G16V8DeviceMode.Registered;
-        
+
         // Complex: equations that use .oe extension
         // equations that require bidirectional macrocells/outputs (TODO)
         if (equations.Any(e => e.Extension == SymbolExtension.OutputEnable))
             return G16V8DeviceMode.Complex;
-        
+
         // Simple:
         return G16V8DeviceMode.Simple;
     }
+
+    //private G16V8MacroCell DetermineMacroCellMode(AstEquation equation)
+    //{
+
+    //}
 }
 
 internal enum PinMode
@@ -128,7 +134,7 @@ internal enum PinMode
 internal sealed class PlacementBuilder
 {
     private readonly G16V8DeviceMode _deviceMode;
-    private readonly List<Fuse> _fuses = new();
+    private readonly List<Fuse> _fuses = [];
 
     public PlacementBuilder(G16V8DeviceMode deviceMode)
     {
@@ -139,9 +145,8 @@ internal sealed class PlacementBuilder
 
     public int Add(AstPin outputPin, IReadOnlyList<PinReference> pinReferences, int productTerm)
     {
-        var macroCell = _deviceMode.MacroCells.SingleOrDefault(mc => mc.Pin.Number == outputPin.PinNumber);
-        if (macroCell is null)
-            throw new ArgumentException($"The pin {outputPin.Symbol} ({outputPin.PinNumber}) is not an output pin.");
+        var macroCell = _deviceMode.MacroCells.SingleOrDefault(mc => mc.Pin.Number == outputPin.PinNumber)
+            ?? throw new ArgumentException($"The pin {outputPin.Symbol} ({outputPin.PinNumber}) is not an output pin.");
 
         if (macroCell.ProductTermCount < pinReferences.Count)
             throw new ArgumentException($"The pin {outputPin.Symbol} ({outputPin.PinNumber}) has not enough product terms ({macroCell.ProductTermCount}) to accommodate {pinReferences.Count} products..");
@@ -160,7 +165,7 @@ internal sealed class PlacementBuilder
             if (devicePin.ValueFuseBase is null)
                 throw new Exception($"The pin {devicePin.Number} is a dedicated pin and cannot be used.");
 
-            var fuseBase = macroCell.FuseBase + productTerm * G16V8DeviceMode.FuseMatrixColumnCount;
+            var fuseBase = macroCell.FuseBase + (productTerm * G16V8DeviceMode.FuseMatrixColumnCount);
             var fuseNumber = fuseBase +
                 (pin.Mode == PinMode.Inverted
                     ? devicePin.InvertedFuseBase
@@ -346,7 +351,7 @@ internal sealed class G16V8DeviceMode
     public IReadOnlyList<G16V8MacroCell> MacroCells { get; }
     public Fuse SYN { get; }
     public Fuse AC0 { get; }
-    
+
     public string DeviceName => "G16V8";
     public int FuseCount => 2194;
 }
@@ -364,11 +369,11 @@ internal class G16V8MacroCell
     }
 
     public int ProductTermCount { get; }
-    
+
     public FuseNumber FuseAC1 { get; }
     public FuseNumber FuseXOR { get; }
     public FuseNumber FuseBase { get; }
     public FuseNumber ProductTermDisableFuseBase { get; }
-    
+
     public DevicePin Pin { get; }
 }

@@ -417,7 +417,6 @@ internal sealed class AstBuilder : CuplParserBaseVisitor<object?>
     public override object VisitExpressionPrecedence(ExpressionPrecedenceContext context)
     {
         var expression = (AstExpression)Visit(context.expression())!;
-        // () on anything else is useless
         expression.Precedence = expression.Kind is AstExpressionKind.BinOperator;
         return expression;
     }
