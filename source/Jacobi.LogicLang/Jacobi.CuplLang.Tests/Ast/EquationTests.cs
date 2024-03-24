@@ -105,12 +105,8 @@ public class EquationTests
             ;
 
         var doc = CuplParser.ParseDocument(cupl, _output);
-        doc.Equations.Should().HaveCount(2);
-        
-        var appender = new AstEquationAppender();
-        appender.AppendAll(doc.Equations);
-        appender.Diagnostics.Should().HaveCount(1);
-        appender.Equations.Should().HaveCount(1);
+        doc.Equations.Should().HaveCount(1);
+        doc.Diagnostics.Should().HaveCount(1);
     }
 
     [Fact]
@@ -123,11 +119,7 @@ public class EquationTests
             ;
 
         var doc = CuplParser.ParseDocument(cupl, _output);
-        doc.Equations.Should().HaveCount(2);
-
-        var appender = new AstEquationAppender();
-        appender.AppendAll(doc.Equations);
-        appender.Diagnostics.Should().HaveCount(0);
-        appender.Equations.Should().HaveCount(1);
+        doc.Equations.Should().HaveCount(1);
+        doc.Diagnostics.Should().HaveCount(0);
     }
 }

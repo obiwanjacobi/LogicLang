@@ -151,6 +151,10 @@ internal sealed class PlacementBuilder
         if (macroCell.ProductTermCount == 7)    // flacky test
             throw new NotImplementedException("Complex Mode is not implemented yet.");
 
+        // TODO: macro cell config
+        _fuses.Add(new Fuse(macroCell.FuseAC1, false));
+        _fuses.Add(new Fuse(macroCell.FuseXOR, false));
+
         foreach (var (pin, devicePin) in devicePins)
         {
             if (devicePin.ValueFuseBase is null)
@@ -182,8 +186,9 @@ internal sealed class PlacementBuilder
             _fuses.Add(new Fuse(macroCell.ProductTermDisableFuseBase + i));
         }
     }
+
     public Placement Build()
-        => new Placement(_fuses);
+        => new Placement(_deviceMode.DeviceName, _deviceMode.Pins.Count, _deviceMode.FuseCount, _fuses);
 }
 
 internal enum PinCapability
@@ -341,6 +346,9 @@ internal sealed class G16V8DeviceMode
     public IReadOnlyList<G16V8MacroCell> MacroCells { get; }
     public Fuse SYN { get; }
     public Fuse AC0 { get; }
+    
+    public string DeviceName => "G16V8";
+    public int FuseCount => 2194;
 }
 
 internal class G16V8MacroCell

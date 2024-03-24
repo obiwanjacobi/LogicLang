@@ -40,7 +40,5 @@ internal static class CuplParser
                 output.WriteLine($"{diag.Message} ({diag.Location})");
             }
         }
-
-        diagnostics.Count.Should().Be(0);
     }
 }

@@ -9,17 +9,8 @@ public class G16V8PlacementTests
     public G16V8PlacementTests(ITestOutputHelper output)
         => _output = output;
 
-    private Gal16V8.Placement DoPlacement(string cupl)
-    {
-        var doc = CuplParser.ParseDocument(cupl, _output);
-
-        var device = Gal16V8.Gal16V8.FromDeviceName("G16V8");
-        var placement = device.CreatePlacement(doc.Pins, doc.Equations);
-        return placement;
-    }
-
     [Fact]
-    public void Test1()
+    public void Input4Output1Append2()
     {
         const string cupl =
             "Device G16V8;" +
@@ -32,8 +23,8 @@ public class G16V8PlacementTests
             "Append Q = C & D;" +
             "";
 
-        var placement = DoPlacement(cupl);
-        placement.Fuses.Should().HaveCount(10);
+        var placement = FusePlacement.DoPlacement(cupl, _output);
+        placement.Fuses.Should().HaveCount(14);
 
         // simple mode
         placement.Fuses.Should().Contain(new Gal16V8.Fuse(2192));

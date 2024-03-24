@@ -13,7 +13,7 @@ internal sealed class AstExpressionSolver : AstExpressionVisitor<object?>
     public IReadOnlyList<AstExpression> Solve(AstEquation equation)
     {
         if (equation.Expression.Operator == AstOperator.And)
-            throw new ArgumentException("Cannot solve equations that have an AND operator at the root of the Expression tree.");
+            return [equation.Expression];
 
         var expression = (AstExpression)Visit(equation.Expression)!;
 

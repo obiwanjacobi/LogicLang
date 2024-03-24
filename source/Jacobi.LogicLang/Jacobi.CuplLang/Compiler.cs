@@ -40,6 +40,7 @@ internal class Compiler
         var appender = new AstEquationAppender();
         appender.AppendAll(doc.Equations);
         doc.Equations = [..appender.Equations];
+        doc.Diagnostics = doc.Diagnostics.Concat(appender.Diagnostics).ToList();
 
         return doc;
     }
