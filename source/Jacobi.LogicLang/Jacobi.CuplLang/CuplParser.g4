@@ -17,6 +17,8 @@ revision: Revision freeText EndUseSpaces;
 rev: Rev freeText EndUseSpaces;
 freeText: FreeText+;
 
+// TODO: these different pin notations can be used combined in one line.
+// pin [2..5, 7, 9] = ...
 pin: pinSingle | pinList | pinRange;
 pinSingle: Pin Number Eq LogicNot? Symbol SemiColon;
 pinList: Pin numberList Eq LogicNot? symbolList SemiColon;

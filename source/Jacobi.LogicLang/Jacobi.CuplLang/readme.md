@@ -118,3 +118,8 @@ TODO
 When an internal representation for the device has been finalized, it should nor be hard to output a valid `.jed` file.
 
 TODO
+
+---
+
+- [ ] Syntax: Pin declarations can combine different list and range notations.
+- [ ] 

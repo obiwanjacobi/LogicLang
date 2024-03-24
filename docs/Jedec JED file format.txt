@@ -3,7 +3,7 @@ http://elm-chan.org/docs/dev/jed.html (use google translate)
 
 The JEDEC format is used as the de facto standard for PLD fuse data format . This is just the same as the relationship between ROM writers and HEX files. PLD compilers output compilation results in this format, and PLD writers read fuse data in this format.
 
-JEDEC format fuse data is written from STX (0x01) to ETX (0x02). Blocks such as various definitions and data enter in this. * is supposed to be used as the delimiter for each block . CR and LF are treated as spaces. Next, let's use GAL16V8 fuse data as an example.
+JEDEC format fuse data is written from STX (0x02) to ETX (0x03). Blocks such as various definitions and data enter in this. * is supposed to be used as the delimiter for each block . CR and LF are treated as spaces. Next, let's use GAL16V8 fuse data as an example.
 
 
 ^B                     ← STX 
