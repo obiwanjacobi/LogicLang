@@ -120,4 +120,20 @@ public class ExpressionTests
 
         expression.Operator.Should().Be(AstOperator.Or);
     }
+
+    [Fact]
+    public void ExplicitPrecedence1()
+    {
+        const string cupl =
+            "Device G22V10;" +
+            "x = (A # B) & C;"
+            ;
+
+        var doc = CuplParser.ParseDocument(cupl, _output);
+
+        var equation = doc.Equations[0];
+        var expression = equation.Expression;
+
+        expression.Operator.Should().Be(AstOperator.And);
+    }
 }
