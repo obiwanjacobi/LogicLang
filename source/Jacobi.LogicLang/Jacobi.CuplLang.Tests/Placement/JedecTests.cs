@@ -26,6 +26,8 @@ public class JedecTests
         var writer = new JedWriter(stream);
         writer.Write(placement);
 
+        stream.Length.Should().BeGreaterThan(20);
+
         stream.Position = 0;
         var reader = new StreamReader(stream);
         _output.WriteLine(reader.ReadToEnd());

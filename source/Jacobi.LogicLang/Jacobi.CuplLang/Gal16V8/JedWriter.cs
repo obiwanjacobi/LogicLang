@@ -26,7 +26,7 @@ internal sealed class JedWriter
         WriteFuseCount(placement.FuseCount);
         WriteProtect(placement.Protect);
         WriteDefaultValue();
-        WriteComment(CopyRightComment);
+        WriteNote(CopyRightComment);
 
         foreach (var line in placement.GetFuseLines())
         {
@@ -87,10 +87,10 @@ internal sealed class JedWriter
         WriteSeparator();
     }
 
-    private void WriteComment(string comment)
+    private void WriteNote(string note)
     {
         Write("N ");
-        Write(comment);
+        Write(note);
         WriteSeparator();
     }
 
@@ -99,8 +99,8 @@ internal sealed class JedWriter
 
     private void WriteEtx()
     {
-        WriteBinary(0x03);
         _writer.Flush();
+        WriteBinary(0x03);
     }
 
     private void WriteBinary(int value)
