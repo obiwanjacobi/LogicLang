@@ -9,11 +9,18 @@ internal static class IrExpressionLaws
     // UniOperator
     public static bool TryDoubleNegation(IrExpression expression, [NotNullWhen(true)] out IrExpression? result)
     {
+        if (expression is IrExpressionUnary unaryExpr)
+            return TryDoubleNegation(unaryExpr, out result);
+
+        result = null;
+        return false;
+    }
+    public static bool TryDoubleNegation(IrExpressionUnary expression, [NotNullWhen(true)] out IrExpression? result)
+    {
         // remove double not operators
-        if (expression is IrExpressionUnary unaryExpr &&
-            unaryExpr.Expression is IrExpressionUnary uniExprChild)
+        if (expression.Expression is IrExpressionUnary uniExpr)
         {
-            result = uniExprChild.Expression;
+            result = uniExpr.Expression;
             return true;
         }
 
@@ -24,10 +31,17 @@ internal static class IrExpressionLaws
     // BinOperator
     public static bool TryIdempotent(IrExpression expression, [NotNullWhen(true)] out IrExpression? result)
     {
-        if (expression is IrExpressionBinary binExpr &&
-            binExpr.Left.Equals(binExpr.Right))
+        if (expression is IrExpressionBinary binExpr)
+            return TryIdempotent(binExpr, out result);
+
+        result = null;
+        return false;
+    }
+    public static bool TryIdempotent(IrExpressionBinary expression, [NotNullWhen(true)] out IrExpression? result)
+    {
+        if (expression.Left.Equals(expression.Right))
         {
-            result = binExpr.Left;
+            result = expression.Left;
             return true;
         }
 
@@ -38,23 +52,30 @@ internal static class IrExpressionLaws
     // BinOperator
     public static bool TryComplement(IrExpression expression, [NotNullWhen(true)] out IrExpression? result)
     {
-        if (expression is IrExpressionBinary binExpr &&
-            binExpr.Operator is IrBinaryOperator.And or IrBinaryOperator.Or)
+        if (expression is IrExpressionBinary binExpr)
+            return TryComplement(binExpr, out result);
+
+        result = null;
+        return false;
+    }
+    public static bool TryComplement(IrExpressionBinary expression, [NotNullWhen(true)] out IrExpression? result)
+    {
+        if (expression.Operator is IrBinaryOperator.And or IrBinaryOperator.Or)
         {
-            var value = binExpr.Operator != IrBinaryOperator.And;
+            var value = expression.Operator != IrBinaryOperator.And;
 
             IrExpression? notResult;
-            if (TrySkipNotExpression(binExpr.Left, out notResult))
+            if (TrySkipNotExpression(expression.Left, out notResult))
             {
-                if (binExpr.Right.Equals(notResult))
+                if (expression.Right.Equals(notResult))
                 {
                     result = new IrExpressionLiteral(value);
                     return true;
                 }
             }
-            else if (TrySkipNotExpression(binExpr.Right, out notResult))
+            else if (TrySkipNotExpression(expression.Right, out notResult))
             {
-                if (binExpr.Left.Equals(notResult))
+                if (expression.Left.Equals(notResult))
                 {
                     result = new IrExpressionLiteral(value);
                     return true;
@@ -69,23 +90,32 @@ internal static class IrExpressionLaws
     public static bool TryCommunatativeSwap(IrExpression expression, [NotNullWhen(true)] out IrExpression? result)
     {
         if (expression is IrExpressionBinary binExpr)
-        {
-            result = new IrExpressionBinary(binExpr.Right!, binExpr.Operator, binExpr.Left!);
-            return true;
-        }
+            return TryCommunatativeSwap(binExpr, out result);
 
         result = null;
         return false;
     }
+    public static bool TryCommunatativeSwap(IrExpressionBinary expression, [NotNullWhen(true)] out IrExpression? result)
+    {
+        result = new IrExpressionBinary(expression.Right, expression.Operator, expression.Left);
+        return true;
+    }
 
     public static bool TryCommunatativeSort(IrExpression expression, [NotNullWhen(true)] out IrExpression? result)
     {
-        if (expression is IrExpressionBinary binExpr &&
-            binExpr.Left is IrExpressionSymbol leftSymbol &&
-            binExpr.Right is IrExpressionSymbol rightSymbol &&
+        if (expression is IrExpressionBinary binExpr)
+            return TryCommunatativeSort(binExpr, out result);
+
+        result = null;
+        return false;
+    }
+    public static bool TryCommunatativeSort(IrExpressionBinary expression, [NotNullWhen(true)] out IrExpression? result)
+    {
+        if (expression.Left is IrExpressionSymbol leftSymbol &&
+            expression.Right is IrExpressionSymbol rightSymbol &&
             String.Compare(leftSymbol.Symbol, rightSymbol.Symbol) > 0)
         {
-            result = new IrExpressionBinary(binExpr.Right, binExpr.Operator, binExpr.Left);
+            result = new IrExpressionBinary(expression.Right, expression.Operator, expression.Left);
             return true;
         }
 

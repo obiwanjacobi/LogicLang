@@ -1,4 +1,3 @@
-using Jacobi.CuplLang.Tests.Ast;
 using Xunit.Abstractions;
 
 namespace Jacobi.CuplLang.Tests.Placement;

@@ -1,4 +1,6 @@
-﻿namespace Jacobi.CuplLang.IR;
+﻿using static Antlr4.Runtime.Atn.SemanticContext;
+
+namespace Jacobi.CuplLang.IR;
 
 internal abstract class IrExpression
 { }
@@ -22,6 +24,9 @@ internal sealed class IrExpressionBinary : IrExpression
     public IrExpression Left { get; }
     public IrExpression Right { get; }
     public IrBinaryOperator Operator { get; }
+
+    public override string ToString()
+        => $"({Left}) {Operator} ({Right})";
 }
 
 // implicit NOT operator
@@ -33,6 +38,9 @@ internal sealed class IrExpressionUnary : IrExpression
     }
 
     public IrExpression Expression { get; }
+
+    public override string ToString()
+        => $"Not ({Expression})";
 }
 
 internal sealed class IrExpressionSymbol : IrExpression
@@ -43,6 +51,9 @@ internal sealed class IrExpressionSymbol : IrExpression
     }
 
     public string Symbol { get; }
+
+    public override string ToString()
+        => Symbol;
 }
 
 internal sealed class IrExpressionLiteral : IrExpression
@@ -53,4 +64,7 @@ internal sealed class IrExpressionLiteral : IrExpression
     }
 
     public bool Value { get; }
+
+    public override string ToString()
+        => Value ? "1" : "0";
 }
