@@ -21,7 +21,7 @@ internal sealed class JedWriter
     public void Write(Placement placement)
     {
         WriteStx();
-        WriteDevice(placement.DeviceName);
+        WriteHeader(placement.DeviceName);
         WitePinCount(placement.PinCount);
         WriteFuseCount(placement.FuseCount);
         WriteProtect(placement.Protect);
@@ -54,9 +54,9 @@ internal sealed class JedWriter
         Write(" ");
     }
 
-    private void WriteDevice(string deviceName)
+    private void WriteHeader(string header)
     {
-        Write(deviceName);
+        Write(header);
         WriteSeparator();
     }
 
@@ -83,7 +83,7 @@ internal sealed class JedWriter
 
     private void WriteDefaultValue()
     {
-        Write("F1");
+        Write("F0");
         WriteSeparator();
     }
 
