@@ -26,7 +26,7 @@ internal sealed class IrExpressionBinary : IrExpression
     public IrBinaryOperator Operator { get; }
 
     public override string ToString()
-        => $"({Left}) {Operator} ({Right})";
+        => $"({Left} {Operator} {Right})";
 }
 
 // implicit NOT operator
@@ -40,7 +40,7 @@ internal sealed class IrExpressionUnary : IrExpression
     public IrExpression Expression { get; }
 
     public override string ToString()
-        => $"Not ({Expression})";
+        => $"Not {Expression}";
 }
 
 internal sealed class IrExpressionSymbol : IrExpression

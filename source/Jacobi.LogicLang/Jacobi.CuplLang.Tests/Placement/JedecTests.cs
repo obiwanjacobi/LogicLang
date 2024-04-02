@@ -32,4 +32,15 @@ public class JedecTests
         var reader = new StreamReader(stream);
         _output.WriteLine(reader.ReadToEnd());
     }
+
+    [Fact]
+    public void ReadJedec()
+    {
+        var filePath = Path.Combine(Environment.CurrentDirectory, "Samples", "Jedec", "BINARYCOUNTERHI.jed");
+        File.Exists(filePath).Should().BeTrue();
+
+        var stream = File.OpenRead(filePath);
+        var reader = new JedReader(stream);
+        var placement = reader.Read();
+    }
 }

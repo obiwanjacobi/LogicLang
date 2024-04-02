@@ -1,4 +1,3 @@
-using Jacobi.CuplLang.Ast;
 using Jacobi.CuplLang.IR;
 using Jacobi.CuplLang.Tests.Ast;
 using Xunit.Abstractions;
@@ -14,7 +13,7 @@ public class IrBuilderTests
     private IReadOnlyList<IrEquation> Build(string cupl)
     {
         var doc = CuplParser.ParseDocument(cupl, _output);
-        
+
         var irEquations = new List<IrEquation>();
 
         var builder = new IrBuilder(doc.Pins);
@@ -41,7 +40,7 @@ public class IrBuilderTests
             "Pin 2 = B;" +
             "Pin 19 = !Q;" +
             "Q = A & B;" +
-            "Append Q = !A & !B;" +
+            "Append Q = (!A # !B);" +
             "";
 
         var equations = Build(cupl);
